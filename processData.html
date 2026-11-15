@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Processor</title>
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        li {
+            margin: 10px;
+        }
+
+        a,
+        a:visited {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Colourful Stagle Data Processor</h1>
+    <p>Complies the various files that contain music data into a single list with only properties needed for this game.
+    </p>
+    <ol>
+        <li>
+            <button onclick="ProcessData.DownloadFromDatabase()">Download latest JSON data files</button>
+        </li>
+        <li>
+            Move files into /JSON directory
+        </li>
+        <li>
+            <button onclick="ProcessData.LoadJSON()">Load JSON files into memory</button>
+        </li>
+        <li>
+            <button onclick="ProcessData.ProcessData()">Process data into Song list</button>
+        </li>
+        <li>
+            <button onclick="ProcessData.MakeAndDownloadFile()">Download songList.ts</button>
+        </li>
+        <li>
+            Move into /TypeScript directory, and recompile.
+        </li>
+    </ol>
+    <p>View console for any errors.</p>
+
+    <p>Data Source: <a
+            href="https://github.com/Sekai-World/sekai-master-db-en-diff/">https://github.com/Sekai-World/sekai-master-db-en-diff/</a>
+    </p>
+
+    <script src="JavaScript/song.js"></script>
+    <script src="JavaScript/dataTypes.js"></script>
+    <script src="JavaScript/processData.js"></script>
+</body>
+
+</html>

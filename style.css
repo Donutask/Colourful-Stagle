@@ -1,0 +1,211 @@
+@font-face {
+    font-family: "Yuruka";
+    src: url("Fonts/Yuruka.ttf") format("truetype");
+}
+
+html {
+    /* https://www.color-hex.com/color-palette/19601 */
+    --colour-background: #0b0b0b;
+    --colour-primary: #86cecb;
+    --colour-accent: #e12885;
+
+    --choices-bg-color: #393939;
+    --choices-bg-color-dropdown: #393939;
+    --choices-text-color: white;
+    --choices-highlighted-color: hsl(177, 42%, 40%);
+    --choices-highlight-color: hsl(177, 42%, 100%);
+    --choices-input-height: 100%;
+    --choices-font-size-md: 1em;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: var(--colour-background);
+    color: white;
+    margin: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    height: 100vh;
+    width: 100%;
+    max-width: 800px;
+    padding: 5px 25px;
+}
+
+.layoutFlexItem {
+    width: 100%;
+    align-items: center;
+}
+
+.loadingAnimated {
+    animation: flickerAnimation 1s infinite;
+}
+
+@keyframes flickerAnimation {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.75;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+h1 {
+    color: var(--colour-primary);
+    text-align: center;
+    font-family: 'Yuruka', sans-serif;
+    margin: 0;
+}
+
+#songContent {
+    text-align: center;
+}
+
+#audio {
+    width: 100%;
+}
+
+#middleContent {
+    flex: 100;
+    overflow-y: scroll;
+    padding-bottom: 20px;
+}
+
+#game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#guesses {
+    list-style-type: "❌ ";
+    line-height: 200%;
+    margin-left: 0px;
+    font-size: 2em;
+}
+
+#searchContainer {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    vertical-align: middle;
+    height: 50px;
+}
+
+.choices {
+    width: 100%;
+    height: 100%;
+}
+
+.choices__input {
+    color: white;
+}
+
+.unitIcon {
+    height: 16px;
+    width: auto;
+    margin-right: 10px;
+}
+
+button {
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+button:hover {
+    filter: brightness(120%);
+}
+
+.blueButton {
+    font-size: 1.5em;
+    font-family: 'Yuruka', sans-serif;
+    background-color: var(--colour-primary);
+    border: none;
+    border-radius: 5px;
+}
+
+#guessButton {
+    max-width: 100px;
+    width: 20%;
+}
+
+
+#giveUpButton {
+    background: none;
+    border: none;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+#hintRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+#jacketViewer {
+    background-color: #393939;
+    color: white;
+    text-align: center;
+    border-color: #aaa;
+    border-width: 1px;
+}
+
+#jacketViewerLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#jacketViewer::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#jacketViewerImg {
+    max-width: 500px;
+}
+
+#winContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#winText {
+    font-size: 3em;
+}
+
+#winSongImg {
+    max-width: 250px;
+}
+
+#winSongTitle {
+    font-size: 1.5em;
+}
+
+#newGame {
+    padding: 10px;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box
+}
