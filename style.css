@@ -80,7 +80,7 @@ h1 {
 
 #middleContent {
     flex: 100;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-bottom: 20px;
 }
 
@@ -190,6 +190,7 @@ button:hover {
 
 #winText {
     font-size: 3em;
+    margin: 20px;
 }
 
 #winSongImg {
@@ -198,14 +199,35 @@ button:hover {
 
 #winSongTitle {
     font-size: 1.5em;
+    margin: 15px;
+}
+
+#dailyContainer p {
+    display: inline;
 }
 
 #newGame {
     padding: 10px;
+    margin: 15px;
 }
 
 *,
 ::after,
 ::before {
     box-sizing: border-box
+}
+
+footer {
+    display: inline;
+    color: #aaa;
+    padding: 5px;
+}
+
+footer a,
+footer a:visited {
+    color: #aaa;
+}
+
+#footerContact {
+    float: right;
 }

@@ -1,10 +1,6 @@
 "use strict";
 const gameScreen = document.getElementById("gameContainer");
 const guessInterface = document.getElementById("guessingInterface");
-const winScreen = document.getElementById("winContainer");
-const winHeading = document.getElementById("winText");
-const winImage = document.getElementById("winSongImg");
-const winTitle = document.getElementById("winSongTitle");
 const audioPlayer = document.getElementById("audio");
 const loadingText = document.getElementById("loadingMusic");
 const hintStatusText = document.getElementById("status");
@@ -13,27 +9,40 @@ const guessButton = document.getElementById("guessButton");
 const artworkViewerButton = document.getElementById("viewArtworkButton");
 const artworkDialogue = document.getElementById("jacketViewer");
 const artworkDialogueImg = document.getElementById("jacketViewerImg");
+const winScreen = document.getElementById("winContainer");
+const winHeading = document.getElementById("winText");
+const winImage = document.getElementById("winSongImg");
+const winTitle = document.getElementById("winSongTitle");
+const dailyContainer = document.getElementById("dailyContainer");
+const playAgainButton = document.getElementById("newGame");
+const dailyDayLabel = document.getElementById("dayLabel");
 const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
 const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
 const startPlaybackSeconds = 1;
-const testingMode = false;
-const loggingMode = true;
+const testingMode = true;
+const loggingMode = false;
 let chosenSong;
 let guessCount = 0;
 let currentAllowedPlaybackSeconds = 1;
 let durationHints = -1;
 let failed = false;
-function ChooseRandomSong() {
-    const song = songs[Math.floor(Math.random() * songs.length)];
-    chosenSong = song;
-    if (loggingMode) {
-        console.log(song);
-    }
-    return song;
+let unlimitedMode = false;
+let hasDoneDaily = false;
+function GetDay() {
+    const epochOffset = 20772;
+    let daysSinceEpoch = Math.floor(Date.now() / 8.64e7);
+    return daysSinceEpoch - epochOffset;
+}
+function GetDailySong() {
+    let songId = randomSongIds[GetDay() % randomSongIds.length];
+    return songs.filter(({ id }) => id == songId)[0];
+}
+function GetRandomSong() {
+    return songs[Math.floor(Math.random() * songs.length)];
 }
 function Guess() {
     guessCount++;
-    if (guessCount >= 10) {
+    if (guessCount >= 9) {
         GiveUp();
         return;
     }
@@ -88,8 +97,6 @@ function GrantHints() {
         artworkViewerButton.classList.remove("hidden");
         artworkDialogueImg.src = chosenSong.GetJacketURL();
     }
-    else if (guessCount == 8) {
-    }
     UpdateHintsStatus();
 }
 function UpdateHintsStatus() {
@@ -109,11 +116,14 @@ function UpdateHintsStatus() {
     else if (guessCount == 6) {
         hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will give the artwork.`;
     }
-    else if (guessCount == 9) {
+    else if (guessCount == 7) {
+        hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. 2 guesses until end of round.`;
+    }
+    else if (guessCount == 8) {
         hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will end the round.`;
     }
     else {
-        hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}.`;
+        hintStatusText.innerText = "";
     }
 }
 function ViewArtwork() {
@@ -145,8 +155,22 @@ function MakeWinScreen() {
     }
     winTitle.textContent = chosenSong.displayName;
     winImage.src = chosenSong.GetJacketURL();
+    if (unlimitedMode) {
+        dailyContainer.classList.add("hidden");
+        playAgainButton.textContent = "New Song";
+    }
+    else {
+        dailyContainer.classList.remove("hidden");
+        dailyDayLabel.textContent = GetDay().toString();
+        playAgainButton.textContent = "Play Unlimited";
+        hasDoneDaily = true;
+    }
 }
 function NewGame() {
+    if (hasDoneDaily && !unlimitedMode) {
+        unlimitedMode = true;
+    }
+    console.log(unlimitedMode);
     audioPlayer.hidden = true;
     loadingText.hidden = false;
     guessList.innerHTML = "";
@@ -160,7 +184,15 @@ function NewGame() {
     currentAllowedPlaybackSeconds = startPlaybackSeconds;
     guessCount = 0;
     failed = false;
-    ChooseRandomSong();
+    if (unlimitedMode) {
+        chosenSong = GetRandomSong();
+    }
+    else {
+        chosenSong = GetDailySong();
+    }
+    if (loggingMode) {
+        console.log(chosenSong);
+    }
     if (testingMode) {
         loadingText.innerText = "Testing mode enabled. No song will load.";
         loadingText.classList.remove("loadingAnimated");

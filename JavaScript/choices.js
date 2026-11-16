@@ -20,6 +20,8 @@ function MakeChoices() {
         searchResultLimit: -1,
         searchPlaceholderValue: "Search for a song",
         placeholderValue: "No song selected",
+        sorter: sortByLabel,
+        shouldSort: true,
         allowHTML: true,
         position: "top"
     });
@@ -27,3 +29,17 @@ function MakeChoices() {
         guessButton.innerText = "Guess";
     });
 }
+const sortByLabel = (a, b) => {
+    const labelA = a.label.split(">")[1];
+    const labelB = b.label.split(">")[1];
+    const aLetter = startsWithLetter(labelA);
+    const bLetter = startsWithLetter(labelB);
+    if (aLetter !== bLetter)
+        return aLetter ? -1 : 1;
+    return labelA.localeCompare(labelB, undefined, {
+        sensitivity: 'base',
+        numeric: true,
+        ignorePunctuation: true,
+    });
+};
+const startsWithLetter = (str) => /^\p{L}/u.test(str);

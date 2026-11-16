@@ -1,18 +1,24 @@
 // HTML ELEMENTS
 const gameScreen = document.getElementById("gameContainer") as HTMLElement;
 const guessInterface = document.getElementById("guessingInterface") as HTMLElement;
-const winScreen = document.getElementById("winContainer") as HTMLElement;
-const winHeading = document.getElementById("winText") as HTMLElement;
-const winImage = document.getElementById("winSongImg") as HTMLImageElement;
-const winTitle = document.getElementById("winSongTitle") as HTMLElement;
 const audioPlayer = document.getElementById("audio") as HTMLAudioElement;
 const loadingText = document.getElementById("loadingMusic") as HTMLElement;
 const hintStatusText = document.getElementById("status") as HTMLElement;
 const guessList = document.getElementById("guesses") as HTMLElement;
 const guessButton = document.getElementById("guessButton") as HTMLButtonElement;
+
 const artworkViewerButton = document.getElementById("viewArtworkButton") as HTMLButtonElement;
 const artworkDialogue = document.getElementById("jacketViewer") as HTMLDialogElement;
 const artworkDialogueImg = document.getElementById("jacketViewerImg") as HTMLImageElement;
+
+const winScreen = document.getElementById("winContainer") as HTMLElement;
+const winHeading = document.getElementById("winText") as HTMLElement;
+const winImage = document.getElementById("winSongImg") as HTMLImageElement;
+const winTitle = document.getElementById("winSongTitle") as HTMLElement;
+
+const dailyContainer = document.getElementById("dailyContainer") as HTMLElement;
+const playAgainButton = document.getElementById("newGame") as HTMLButtonElement;
+const dailyDayLabel = document.getElementById("dayLabel") as HTMLElement;
 
 // CONSTANTS
 const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
@@ -21,32 +27,37 @@ const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/"
 const startPlaybackSeconds = 1;
 
 // DEBUGGING
-const testingMode = false;
-const loggingMode = true;
+const testingMode = true;
+const loggingMode = false;
 
 // GAME PARAMETERS
 let chosenSong: Song;
-// let audioURL: string = "";
 let guessCount: number = 0;
 let currentAllowedPlaybackSeconds = 1;
 let durationHints: number = -1;
 let failed = false;
+let unlimitedMode = false;
+let hasDoneDaily = false;
 
-
-function ChooseRandomSong(): Song {
-    const song: Song = songs[Math.floor(Math.random() * songs.length)];
-
-    chosenSong = song;
-
-    if (loggingMode) { console.log(song); }
-
-    return song;
+// Day since release of game
+function GetDay() {
+    const epochOffset = 20772;
+    let daysSinceEpoch = Math.floor(Date.now() / 8.64e7);
+    return daysSinceEpoch - epochOffset;
 }
 
+function GetDailySong(): Song {
+    let songId = randomSongIds[GetDay() % randomSongIds.length];
+    return songs.filter(({ id }) => id == songId)[0];
+}
+
+function GetRandomSong(): Song {
+    return songs[Math.floor(Math.random() * songs.length)];
+}
 
 function Guess() {
     guessCount++;
-    if (guessCount >= 10) {
+    if (guessCount >= 9) {
         GiveUp();
         return;
     }
@@ -106,8 +117,6 @@ function GrantHints() {
         // cover
         artworkViewerButton.classList.remove("hidden");
         artworkDialogueImg.src = chosenSong.GetJacketURL();
-    } else if (guessCount == 8) {
-
     }
 
     UpdateHintsStatus();
@@ -131,11 +140,14 @@ function UpdateHintsStatus() {
     else if (guessCount == 6) {
         hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will give the artwork.`;
     }
-    else if (guessCount == 9) {
+    else if (guessCount == 7) {
+        hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. 2 guesses until end of round.`;
+    }
+    else if (guessCount == 8) {
         hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will end the round.`;
     }
     else {
-        hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}.`;
+        hintStatusText.innerText = "";
     }
 }
 
@@ -168,15 +180,30 @@ function MakeWinScreen() {
             winHeading.innerHTML = `You got the song in <b>${guessCount}</b> guesses` + (guessCount <= 5 ? "!" : ".");
         }
     }
-    winTitle.textContent = chosenSong.displayName;
 
+    winTitle.textContent = chosenSong.displayName;
     winImage.src = chosenSong.GetJacketURL();
+
+
+    if (unlimitedMode) {
+        dailyContainer.classList.add("hidden");
+        playAgainButton.textContent = "New Song";
+    } else {
+        dailyContainer.classList.remove("hidden");
+        dailyDayLabel.textContent = GetDay().toString();
+        playAgainButton.textContent = "Play Unlimited";
+
+        hasDoneDaily = true;
+    }
 }
 
 // Artwork image for current song
-
-
 function NewGame() {
+    if (hasDoneDaily && !unlimitedMode) {
+        unlimitedMode = true;
+    }
+    console.log(unlimitedMode);
+
     audioPlayer.hidden = true;
     loadingText.hidden = false;
     guessList.innerHTML = "";
@@ -192,7 +219,13 @@ function NewGame() {
     guessCount = 0;
     failed = false;
 
-    ChooseRandomSong();
+    if (unlimitedMode) {
+        chosenSong = GetRandomSong();
+    } else {
+        chosenSong = GetDailySong();
+    }
+    if (loggingMode) { console.log(chosenSong); }
+
     if (testingMode) {
         loadingText.innerText = "Testing mode enabled. No song will load."
         loadingText.classList.remove("loadingAnimated")

@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Choices.js for music search -->
+    <!-- This site uses Choices.js for music search -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 </head>
@@ -16,7 +16,7 @@
 <body>
     <div id="content">
         <header class="layoutFlexItem">
-            <h1>Colourful Stagle!</h1>
+            <h1 id="title">Colorful Stagle!</h1>
         </header>
         <div class="layoutFlexItem" id="songContent">
             <p id="loadingMusic" class="loadingAnimated">Loading song. Please wait...</p>
@@ -38,6 +38,11 @@
                 <img id="winSongImg" src="Images/loading_jacket.svg">
                 <!-- <img id="winSticker" src="Images/stickers/wonderhoy.png"> -->
                 <p id="winSongTitle">Song Name</p>
+
+                <div id="dailyContainer">
+                    <p>Daily song #<b id="dayLabel"></b></p>
+                </div>
+
                 <button id="newGame" class="blueButton" onclick="NewGame()">Play Again</button>
             </div>
         </div>
@@ -47,8 +52,15 @@
                 <select id="choices"></select>
                 <button id="guessButton" class="blueButton" onclick="Guess()">Guess</button>
             </search>
-            <button id="giveUpButton" onclick="GiveUp()">Give Up</button>
+
+            <!-- <button id="giveUpButton" onclick="GiveUp()">Give Up</button> -->
         </div>
+
+        <footer>
+            <small>This is a non-commercial fan site, unaffiliated with Sega, Colorful Palette, or Crypton. Data
+                from <a href="https://github.com/Sekai-World">Sekai-World</a> & <a
+                    href="https://pjsk.cleista.cc/">Cleista</a>.</small>
+        </footer>
     </div>
     <dialog id="jacketViewer">
         <div id="jacketViewerLayout">
@@ -61,6 +73,7 @@
     <!-- Game Scripts -->
     <script src="JavaScript/song.js"></script>
     <script src="JavaScript/songList.js"></script>
+    <script src="JavaScript/randomSongIds.js"></script>
     <script src="JavaScript/script.js"></script>
     <script src="JavaScript/choices.js"></script>
 </body>
