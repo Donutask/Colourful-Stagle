@@ -188,9 +188,38 @@ button:hover {
     align-items: center;
 }
 
+#winHeaderContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    margin: 20px;
+    gap: 10px;
+}
+
 #winText {
     font-size: 3em;
-    margin: 20px;
+    text-align: center;
+}
+
+.winSticker {
+    width: 25%;
+    max-width: 100px;
+}
+
+@media (max-width: 600px) {
+    .winSticker {
+        display: none;
+    }
+}
+
+#winStickerL {
+    rotate: -5deg;
+}
+
+#winStickerR {
+    rotate: 5deg;
 }
 
 #winSongImg {

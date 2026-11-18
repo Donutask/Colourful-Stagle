@@ -1,5 +1,6 @@
 // HTML ELEMENTS
 const gameScreen = document.getElementById("gameContainer") as HTMLElement;
+const gameTitle = document.getElementById("title") as HTMLElement;
 const guessInterface = document.getElementById("guessingInterface") as HTMLElement;
 const audioPlayer = document.getElementById("audio") as HTMLAudioElement;
 const loadingText = document.getElementById("loadingMusic") as HTMLElement;
@@ -15,6 +16,9 @@ const winScreen = document.getElementById("winContainer") as HTMLElement;
 const winHeading = document.getElementById("winText") as HTMLElement;
 const winImage = document.getElementById("winSongImg") as HTMLImageElement;
 const winTitle = document.getElementById("winSongTitle") as HTMLElement;
+const stickerImageL = document.getElementById("winStickerL") as HTMLImageElement;
+const stickerImageR = document.getElementById("winStickerR") as HTMLImageElement;
+
 
 const dailyContainer = document.getElementById("dailyContainer") as HTMLElement;
 const playAgainButton = document.getElementById("newGame") as HTMLButtonElement;
@@ -23,20 +27,21 @@ const dailyDayLabel = document.getElementById("dayLabel") as HTMLElement;
 // CONSTANTS
 const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
 const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/"
-// const extraPlaybackSecondsPerGuess = 5;
 const startPlaybackSeconds = 1;
+const gameName = "Colorful Stagle!"
 
 // DEBUGGING
-const testingMode = true;
+const testingMode = false;
 const loggingMode = false;
 
 // GAME PARAMETERS
 let chosenSong: Song;
 let guessCount: number = 0;
 let currentAllowedPlaybackSeconds = 1;
-let durationHints: number = -1;
+// True: run out guesses. False: guessed correctly. Only checked on the results screen.
 let failed = false;
 let unlimitedMode = false;
+// This is not stored yet
 let hasDoneDaily = false;
 
 // Day since release of game
@@ -175,7 +180,9 @@ function MakeWinScreen() {
         winHeading.innerHTML = `The song was...`;
     } else {
         if (guessCount == 1) {
-            winHeading.innerHTML = 'Wonderhoy! You got the song in just one guess!';
+            winHeading.innerHTML = 'You got the song in just one guess!';
+        } else if (guessCount <= 0) {
+            winHeading.innerHTML = `You somehow got the song in <b>${guessCount}</b> guesses.`;
         } else {
             winHeading.innerHTML = `You got the song in <b>${guessCount}</b> guesses` + (guessCount <= 5 ? "!" : ".");
         }
@@ -183,6 +190,10 @@ function MakeWinScreen() {
 
     winTitle.textContent = chosenSong.displayName;
     winImage.src = chosenSong.GetJacketURL();
+
+    let stickerURL = ChooseSticker();
+    stickerImageL.src = stickerURL;
+    stickerImageR.src = stickerURL;
 
 
     if (unlimitedMode) {
@@ -197,12 +208,41 @@ function MakeWinScreen() {
     }
 }
 
+function ChooseSticker(): string {
+    const baseURL = "Images/stickers/emu/";
+    let fileName = "";
+    console.log(guessCount);
+
+    if (guessCount == 1) {
+        fileName = "wonderhoy";
+    }
+    else if (guessCount == 2) {
+        fileName = "yay-yay";
+    }
+    else if (guessCount == 3) {
+        fileName = "hurray-hurray";
+    }
+    else if (guessCount == 4 || guessCount == 5) {
+        fileName = "that-was-fun";
+    }
+    else if (guessCount >= 6 && guessCount <= 8) {
+        fileName = "mmmmm";
+    }
+    else if (guessCount >= 9) {
+        fileName = "gotta-study";
+    }
+    else {
+        fileName = "whaaat";
+    }
+
+    return baseURL + fileName + ".png";
+}
+
 // Artwork image for current song
 function NewGame() {
     if (hasDoneDaily && !unlimitedMode) {
         unlimitedMode = true;
     }
-    console.log(unlimitedMode);
 
     audioPlayer.hidden = true;
     loadingText.hidden = false;
@@ -229,7 +269,6 @@ function NewGame() {
     if (testingMode) {
         loadingText.innerText = "Testing mode enabled. No song will load."
         loadingText.classList.remove("loadingAnimated")
-        durationHints = 0;
         UpdateHintsStatus();
         guessButton.disabled = false;
     } else {
@@ -242,8 +281,16 @@ function NewGame() {
     winScreen.classList.add("hidden");
     winImage.src = "Images/loading_jacket.svg"
 
+    ShowTitle();
 }
 
+function ShowTitle() {
+    if (unlimitedMode) {
+        gameTitle.textContent = "Unlimited " + gameName;
+    } else {
+        gameTitle.textContent = "Daily " + gameName;
+    }
+}
 // Restrict playback to small parts
 audioPlayer.addEventListener("timeupdate", () => {
     if (audioPlayer.currentTime > currentAllowedPlaybackSeconds) {
@@ -273,4 +320,5 @@ audioPlayer.addEventListener("loadeddata", () => {
 window.addEventListener("load", () => {
     MakeChoices();
     NewGame();
+
 });

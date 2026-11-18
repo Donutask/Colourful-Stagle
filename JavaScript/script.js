@@ -1,5 +1,6 @@
 "use strict";
 const gameScreen = document.getElementById("gameContainer");
+const gameTitle = document.getElementById("title");
 const guessInterface = document.getElementById("guessingInterface");
 const audioPlayer = document.getElementById("audio");
 const loadingText = document.getElementById("loadingMusic");
@@ -13,18 +14,20 @@ const winScreen = document.getElementById("winContainer");
 const winHeading = document.getElementById("winText");
 const winImage = document.getElementById("winSongImg");
 const winTitle = document.getElementById("winSongTitle");
+const stickerImageL = document.getElementById("winStickerL");
+const stickerImageR = document.getElementById("winStickerR");
 const dailyContainer = document.getElementById("dailyContainer");
 const playAgainButton = document.getElementById("newGame");
 const dailyDayLabel = document.getElementById("dayLabel");
 const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
 const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
 const startPlaybackSeconds = 1;
-const testingMode = true;
+const gameName = "Colorful Stagle!";
+const testingMode = false;
 const loggingMode = false;
 let chosenSong;
 let guessCount = 0;
 let currentAllowedPlaybackSeconds = 1;
-let durationHints = -1;
 let failed = false;
 let unlimitedMode = false;
 let hasDoneDaily = false;
@@ -147,7 +150,10 @@ function MakeWinScreen() {
     }
     else {
         if (guessCount == 1) {
-            winHeading.innerHTML = 'Wonderhoy! You got the song in just one guess!';
+            winHeading.innerHTML = 'You got the song in just one guess!';
+        }
+        else if (guessCount <= 0) {
+            winHeading.innerHTML = `You somehow got the song in <b>${guessCount}</b> guesses.`;
         }
         else {
             winHeading.innerHTML = `You got the song in <b>${guessCount}</b> guesses` + (guessCount <= 5 ? "!" : ".");
@@ -155,6 +161,9 @@ function MakeWinScreen() {
     }
     winTitle.textContent = chosenSong.displayName;
     winImage.src = chosenSong.GetJacketURL();
+    let stickerURL = ChooseSticker();
+    stickerImageL.src = stickerURL;
+    stickerImageR.src = stickerURL;
     if (unlimitedMode) {
         dailyContainer.classList.add("hidden");
         playAgainButton.textContent = "New Song";
@@ -166,11 +175,37 @@ function MakeWinScreen() {
         hasDoneDaily = true;
     }
 }
+function ChooseSticker() {
+    const baseURL = "Images/stickers/emu/";
+    let fileName = "";
+    console.log(guessCount);
+    if (guessCount == 1) {
+        fileName = "wonderhoy";
+    }
+    else if (guessCount == 2) {
+        fileName = "yay-yay";
+    }
+    else if (guessCount == 3) {
+        fileName = "hurray-hurray";
+    }
+    else if (guessCount == 4 || guessCount == 5) {
+        fileName = "that-was-fun";
+    }
+    else if (guessCount >= 6 && guessCount <= 8) {
+        fileName = "mmmmm";
+    }
+    else if (guessCount >= 9) {
+        fileName = "gotta-study";
+    }
+    else {
+        fileName = "whaaat";
+    }
+    return baseURL + fileName + ".png";
+}
 function NewGame() {
     if (hasDoneDaily && !unlimitedMode) {
         unlimitedMode = true;
     }
-    console.log(unlimitedMode);
     audioPlayer.hidden = true;
     loadingText.hidden = false;
     guessList.innerHTML = "";
@@ -196,7 +231,6 @@ function NewGame() {
     if (testingMode) {
         loadingText.innerText = "Testing mode enabled. No song will load.";
         loadingText.classList.remove("loadingAnimated");
-        durationHints = 0;
         UpdateHintsStatus();
         guessButton.disabled = false;
     }
@@ -208,6 +242,15 @@ function NewGame() {
     guessInterface.classList.remove("hidden");
     winScreen.classList.add("hidden");
     winImage.src = "Images/loading_jacket.svg";
+    ShowTitle();
+}
+function ShowTitle() {
+    if (unlimitedMode) {
+        gameTitle.textContent = "Unlimited " + gameName;
+    }
+    else {
+        gameTitle.textContent = "Daily " + gameName;
+    }
 }
 audioPlayer.addEventListener("timeupdate", () => {
     if (audioPlayer.currentTime > currentAllowedPlaybackSeconds) {
