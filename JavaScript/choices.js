@@ -10,13 +10,14 @@ function MakeChoices() {
             customProperties: {
                 title: song.displayName,
                 unit: song.GetUnitDisplayName(),
-                pronunciation: song.pronunciation
+                pronunciation: song.pronunciation,
+                abbreviation: song.GetUnitAbbreviatedName(),
             },
         });
     });
     choices = new Choices(songChoicesElement, {
         choices: choiceList,
-        searchFields: ['customProperties.pronunciation', 'customProperties.unit', 'customProperties.title'],
+        searchFields: ['customProperties.pronunciation', 'customProperties.unit', 'customProperties.title', 'customProperties.abbreviation'],
         searchResultLimit: -1,
         searchPlaceholderValue: "Search for a song",
         placeholderValue: "No song selected",

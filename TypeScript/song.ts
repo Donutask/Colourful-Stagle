@@ -34,6 +34,27 @@ class Song {
         }
     }
 
+    public GetUnitAbbreviatedName() {
+        switch (this.unit) {
+            case Unit.vocaloid:
+                return "vs";
+            case Unit.idol:
+                return "mmj";
+            case Unit.street:
+                return "vbs";
+            case Unit.theme_park:
+                return "wxs";
+            case Unit.light_music_club:
+                return "ln";
+            case Unit.school_refusal:
+                return "n25";
+            case Unit.all:
+                return "all";
+            default:
+                return "other"
+        }
+    }
+
     // Artwork img
     public GetJacketURL() {
         // jacket ids need leading 0
@@ -47,6 +68,7 @@ class Song {
     }
 }
 
+// Band/group
 enum Unit {
     all = "all",
     other = "other",

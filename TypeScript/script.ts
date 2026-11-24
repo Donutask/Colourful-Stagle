@@ -19,7 +19,6 @@ const winTitle = document.getElementById("winSongTitle") as HTMLElement;
 const stickerImageL = document.getElementById("winStickerL") as HTMLImageElement;
 const stickerImageR = document.getElementById("winStickerR") as HTMLImageElement;
 
-
 const dailyContainer = document.getElementById("dailyContainer") as HTMLElement;
 const playAgainButton = document.getElementById("newGame") as HTMLButtonElement;
 const dailyDayLabel = document.getElementById("dayLabel") as HTMLElement;
@@ -29,9 +28,11 @@ const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
 const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/"
 const startPlaybackSeconds = 1;
 const gameName = "Colorful Stagle!"
+const dailyCompletionKey = "dailyCompletionDate";
+const dailyGuessesKey = "dailyGuessCount";
 
 // DEBUGGING
-const testingMode = false;
+const testingMode = true;
 const loggingMode = false;
 
 // GAME PARAMETERS
@@ -39,7 +40,7 @@ let chosenSong: Song;
 let guessCount: number = 0;
 let currentAllowedPlaybackSeconds = 1;
 // True: run out guesses. False: guessed correctly. Only checked on the results screen.
-let failed = false;
+// let failed = false;
 let unlimitedMode = false;
 // This is not stored yet
 let hasDoneDaily = false;
@@ -63,7 +64,7 @@ function GetRandomSong(): Song {
 function Guess() {
     guessCount++;
     if (guessCount >= 9) {
-        GiveUp();
+        MakeResultsScreen();
         return;
     }
     GrantHints();
@@ -77,7 +78,7 @@ function Guess() {
         let songId = parseInt(songChoicesElement.value);
 
         if (songId == chosenSong.id) {
-            MakeWinScreen();
+            MakeResultsScreen();
             return;
         } else {
             element.textContent = songs.filter(({ id }) => id == songId)[0].displayName;
@@ -94,11 +95,6 @@ function DeselectSong() {
     songChoicesElement.value = ""
     choices.removeActiveItems();
     guessButton.innerText = "Skip";
-}
-
-function GiveUp() {
-    failed = true;
-    MakeWinScreen();
 }
 
 function GrantHints() {
@@ -167,7 +163,7 @@ function HideArtwork() {
     artworkDialogue.close();
 }
 
-function MakeWinScreen() {
+function MakeResultsScreen() {
     gameScreen.classList.add("hidden");
     guessInterface.classList.add("hidden");
     winScreen.classList.remove("hidden");
@@ -176,7 +172,7 @@ function MakeWinScreen() {
     currentAllowedPlaybackSeconds = 9999;
     hintStatusText.innerHTML = "";
 
-    if (failed) {
+    if (guessCount >= 9) {
         winHeading.innerHTML = `The song was...`;
     } else {
         if (guessCount == 1) {
@@ -204,14 +200,18 @@ function MakeWinScreen() {
         dailyDayLabel.textContent = GetDay().toString();
         playAgainButton.textContent = "Play Unlimited";
 
-        hasDoneDaily = true;
+        if (!hasDoneDaily) {
+            localStorage.setItem(dailyCompletionKey, new Date().toISOString())
+            localStorage.setItem(dailyGuessesKey, guessCount.toString())
+
+            hasDoneDaily = true;
+        }
     }
 }
 
 function ChooseSticker(): string {
     const baseURL = "Images/stickers/emu/";
     let fileName = "";
-    console.log(guessCount);
 
     if (guessCount == 1) {
         fileName = "wonderhoy";
@@ -257,7 +257,6 @@ function NewGame() {
 
     currentAllowedPlaybackSeconds = startPlaybackSeconds;
     guessCount = 0;
-    failed = false;
 
     if (unlimitedMode) {
         chosenSong = GetRandomSong();
@@ -291,6 +290,23 @@ function ShowTitle() {
         gameTitle.textContent = "Daily " + gameName;
     }
 }
+
+function CheckLastDoneDate() {
+    let lastDoneValue = localStorage.getItem(dailyCompletionKey);
+
+    if (lastDoneValue) {
+        const lastDoneDate = new Date(lastDoneValue);
+        const now = new Date();
+
+        if (lastDoneDate.getFullYear() == now.getFullYear()
+            && lastDoneDate.getMonth() == now.getMonth()
+            && lastDoneDate.getDate() == now.getDate()) {
+
+            hasDoneDaily = true;
+        }
+    }
+}
+
 // Restrict playback to small parts
 audioPlayer.addEventListener("timeupdate", () => {
     if (audioPlayer.currentTime > currentAllowedPlaybackSeconds) {
@@ -321,4 +337,9 @@ window.addEventListener("load", () => {
     MakeChoices();
     NewGame();
 
+    CheckLastDoneDate();
+    if (hasDoneDaily) {
+        guessCount = parseInt(localStorage.getItem(dailyGuessesKey) ?? "0");
+        MakeResultsScreen();
+    }
 });

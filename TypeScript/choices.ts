@@ -1,7 +1,8 @@
 // Use Choices.js library to create a searchable list of all songs
 const songChoicesElement = document.getElementById('choices') as HTMLSelectElement;
 
-//@ts-expect-error
+
+//@ts-expect-error Importing with URL, don't have the .td files
 let choices: Choices | undefined;
 
 function MakeChoices() {
@@ -13,30 +14,24 @@ function MakeChoices() {
             customProperties: {
                 title: song.displayName,
                 unit: song.GetUnitDisplayName(),
-                pronunciation: song.pronunciation
+                pronunciation: song.pronunciation,
+                abbreviation: song.GetUnitAbbreviatedName(),
             },
         })
     });
 
-    // Importing with URL, don't have the td files
     //@ts-expect-error
     choices = new Choices(songChoicesElement, {
         choices: choiceList,
         // The value is a number, don't search that.
         // Search the individual properties instead of the full thing to give more leeway. 
         // 'pronunciation' will let you search text without the special characters.
-        searchFields: ['customProperties.pronunciation', 'customProperties.unit', 'customProperties.title'],
+        searchFields: ['customProperties.pronunciation', 'customProperties.unit', 'customProperties.title', 'customProperties.abbreviation'],
         searchResultLimit: -1,
         searchPlaceholderValue: "Search for a song",
         placeholderValue: "No song selected",
         sorter: sortByLabel,
         shouldSort: true,
-        // More lenient search
-        // fuseOptions: {
-        //     threshold: 0.75,
-        //     ignoreLocation: true,
-        //     includeScore: true
-        // },
         allowHTML: true,
         position: "top"
     });

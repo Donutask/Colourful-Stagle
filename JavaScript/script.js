@@ -23,12 +23,13 @@ const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
 const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
 const startPlaybackSeconds = 1;
 const gameName = "Colorful Stagle!";
-const testingMode = false;
+const dailyCompletionKey = "dailyCompletionDate";
+const dailyGuessesKey = "dailyGuessCount";
+const testingMode = true;
 const loggingMode = false;
 let chosenSong;
 let guessCount = 0;
 let currentAllowedPlaybackSeconds = 1;
-let failed = false;
 let unlimitedMode = false;
 let hasDoneDaily = false;
 function GetDay() {
@@ -46,7 +47,7 @@ function GetRandomSong() {
 function Guess() {
     guessCount++;
     if (guessCount >= 9) {
-        GiveUp();
+        MakeResultsScreen();
         return;
     }
     GrantHints();
@@ -58,7 +59,7 @@ function Guess() {
     else {
         let songId = parseInt(songChoicesElement.value);
         if (songId == chosenSong.id) {
-            MakeWinScreen();
+            MakeResultsScreen();
             return;
         }
         else {
@@ -73,10 +74,6 @@ function DeselectSong() {
     songChoicesElement.value = "";
     choices.removeActiveItems();
     guessButton.innerText = "Skip";
-}
-function GiveUp() {
-    failed = true;
-    MakeWinScreen();
 }
 function GrantHints() {
     if (guessCount == 1) {
@@ -138,14 +135,14 @@ function ViewArtwork() {
 function HideArtwork() {
     artworkDialogue.close();
 }
-function MakeWinScreen() {
+function MakeResultsScreen() {
     gameScreen.classList.add("hidden");
     guessInterface.classList.add("hidden");
     winScreen.classList.remove("hidden");
     artworkViewerButton.classList.add("hidden");
     currentAllowedPlaybackSeconds = 9999;
     hintStatusText.innerHTML = "";
-    if (failed) {
+    if (guessCount >= 9) {
         winHeading.innerHTML = `The song was...`;
     }
     else {
@@ -172,13 +169,16 @@ function MakeWinScreen() {
         dailyContainer.classList.remove("hidden");
         dailyDayLabel.textContent = GetDay().toString();
         playAgainButton.textContent = "Play Unlimited";
-        hasDoneDaily = true;
+        if (!hasDoneDaily) {
+            localStorage.setItem(dailyCompletionKey, new Date().toISOString());
+            localStorage.setItem(dailyGuessesKey, guessCount.toString());
+            hasDoneDaily = true;
+        }
     }
 }
 function ChooseSticker() {
     const baseURL = "Images/stickers/emu/";
     let fileName = "";
-    console.log(guessCount);
     if (guessCount == 1) {
         fileName = "wonderhoy";
     }
@@ -218,7 +218,6 @@ function NewGame() {
     artworkViewerButton.classList.add("hidden");
     currentAllowedPlaybackSeconds = startPlaybackSeconds;
     guessCount = 0;
-    failed = false;
     if (unlimitedMode) {
         chosenSong = GetRandomSong();
     }
@@ -252,6 +251,18 @@ function ShowTitle() {
         gameTitle.textContent = "Daily " + gameName;
     }
 }
+function CheckLastDoneDate() {
+    let lastDoneValue = localStorage.getItem(dailyCompletionKey);
+    if (lastDoneValue) {
+        const lastDoneDate = new Date(lastDoneValue);
+        const now = new Date();
+        if (lastDoneDate.getFullYear() == now.getFullYear()
+            && lastDoneDate.getMonth() == now.getMonth()
+            && lastDoneDate.getDate() == now.getDate()) {
+            hasDoneDaily = true;
+        }
+    }
+}
 audioPlayer.addEventListener("timeupdate", () => {
     if (audioPlayer.currentTime > currentAllowedPlaybackSeconds) {
         audioPlayer.currentTime = currentAllowedPlaybackSeconds;
@@ -271,6 +282,12 @@ audioPlayer.addEventListener("loadeddata", () => {
     guessButton.disabled = false;
 });
 window.addEventListener("load", () => {
+    var _a;
     MakeChoices();
     NewGame();
+    CheckLastDoneDate();
+    if (hasDoneDaily) {
+        guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
+        MakeResultsScreen();
+    }
 });
