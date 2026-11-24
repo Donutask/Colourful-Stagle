@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="favicon.ico" rel="icon">
     <link href="favicon.png" type="image/png" rel="icon">
+    <meta name="theme-color" content="#86cecb" />
 
     <!-- This site uses Choices.js for music search -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
@@ -26,7 +27,7 @@
             <audio controls controlsList="nodownload" id="audio" hidden></audio>
             <div id="hintRow">
                 <p id="status"></p>
-                <button id="viewArtworkButton" class="hidden" onclick="ViewArtwork()">View Artwork</button>
+                <button id="viewArtworkButton" class="hidden" hidden onclick="Game.ViewArtwork()">View Artwork</button>
             </div>
         </div>
 
@@ -36,7 +37,7 @@
                 </ol>
             </div>
 
-            <div id="winContainer" class="hidden">
+            <div id="winContainer" class="hidden" hidden>
                 <div id="winHeaderContainer">
                     <img class="winSticker" id="winStickerL" width="100">
                     <p id="winText"></p>
@@ -50,16 +51,14 @@
                     <p>Daily song #<b id="dayLabel"></b></p>
                 </div>
 
-                <button id="newGame" class="blueButton" onclick="NewGame()">Play Again</button>
+                <button id="newGame" class="blueButton" onclick="Game.NewGame()">Play Again</button>
             </div>
         </div>
 
         <div class="layoutFlexItem" id="guessingInterface">
             <search id="searchContainer">
-
-                <!-- <label for="choices">Choose a song</label> -->
                 <select aria-label="Choose a song" id="choices"></select>
-                <button id="guessButton" class="blueButton" onclick="Guess()">Guess</button>
+                <button id="guessButton" class="blueButton" onclick="Game.Guess()" disabled>Guess</button>
             </search>
         </div>
     </div>
@@ -72,7 +71,7 @@
     <dialog id="jacketViewer">
         <div id="jacketViewerLayout">
             <img id="jacketViewerImg">
-            <button class="blueButton" onclick="HideArtwork()">Hide</button>
+            <button class="blueButton" onclick="Game.HideArtwork()">Hide</button>
         </div>
     </dialog>
 

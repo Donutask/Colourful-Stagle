@@ -67,13 +67,17 @@ var Game;
             else {
                 element.textContent = songs.filter(({ id }) => id == songId)[0].displayName;
             }
+            ChoicesManager.choices.removeChoice(songId);
         }
         guessList.appendChild(element);
         DeselectSong();
     }
+    Game.Guess = Guess;
     function DeselectSong() {
-        ChoicesManager.songChoicesElement.value = "";
-        ChoicesManager.choices.removeActiveItems();
+        if (ChoicesManager.choices != null) {
+            ChoicesManager.songChoicesElement.value = "";
+            ChoicesManager.choices.removeActiveItems();
+        }
         Game.guessButton.innerText = "Skip";
     }
     function GrantHints() {
@@ -93,6 +97,7 @@ var Game;
             currentAllowedPlaybackSeconds = Math.ceil(audioPlayer.duration);
         }
         else if (guessCount == 6) {
+            ChoicesManager.FilterChoicesToUnit(chosenSong.unit);
         }
         else if (guessCount == 7) {
             artworkViewerButton.classList.remove("hidden");
@@ -133,9 +138,11 @@ var Game;
             artworkDialogueImg.src = chosenSong.GetJacketURL();
         }
     }
+    Game.ViewArtwork = ViewArtwork;
     function HideArtwork() {
         artworkDialogue.close();
     }
+    Game.HideArtwork = HideArtwork;
     function MakeResultsScreen() {
         gameScreen.classList.add("hidden");
         guessInterface.classList.add("hidden");
@@ -213,7 +220,6 @@ var Game;
         guessList.innerHTML = "";
         hintStatusText.innerText = "";
         hintStatusText.classList.remove("hidden");
-        DeselectSong();
         Game.guessButton.disabled = true;
         artworkDialogueImg.src = "";
         loadingText.innerText = "Loading song. Please wait...";
@@ -222,6 +228,8 @@ var Game;
         artworkViewerButton.classList.add("hidden");
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
         guessCount = 0;
+        DeselectSong();
+        ChoicesManager.ResetChoices();
         if (unlimitedMode) {
             chosenSong = GetRandomSong();
         }
@@ -247,6 +255,7 @@ var Game;
         winImage.src = "Images/loading_jacket.svg";
         ShowTitle();
     }
+    Game.NewGame = NewGame;
     function ShowTitle() {
         if (unlimitedMode) {
             gameTitle.textContent = "Unlimited " + gameName;
@@ -288,12 +297,14 @@ var Game;
     });
     window.addEventListener("load", () => {
         var _a;
-        ChoicesManager.MakeChoices();
+        winScreen.hidden = false;
+        artworkViewerButton.hidden = false;
         NewGame();
         CheckLastDoneDate();
         if (hasDoneDaily) {
             guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
             MakeResultsScreen();
         }
+        ChoicesManager.MakeChoices();
     });
 })(Game || (Game = {}));

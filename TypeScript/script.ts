@@ -62,7 +62,7 @@ namespace Game {
         return songs[Math.floor(Math.random() * songs.length)];
     }
 
-    function Guess() {
+    export function Guess() {
         guessCount++;
         if (guessCount >= 9) {
             MakeResultsScreen();
@@ -86,7 +86,7 @@ namespace Game {
             }
 
             // If I remove them, then it won't be there for next song.
-            // choices.removeChoice(songId);
+            ChoicesManager.choices.removeChoice(songId);
         }
 
         guessList.appendChild(element);
@@ -94,8 +94,10 @@ namespace Game {
     }
 
     function DeselectSong() {
-        ChoicesManager.songChoicesElement.value = ""
-        ChoicesManager.choices.removeActiveItems();
+        if (ChoicesManager.choices != null) {
+            ChoicesManager.songChoicesElement.value = ""
+            ChoicesManager.choices.removeActiveItems();
+        }
         guessButton.innerText = "Skip";
     }
 
@@ -116,6 +118,7 @@ namespace Game {
             currentAllowedPlaybackSeconds = Math.ceil(audioPlayer.duration);
         } else if (guessCount == 6) {
             // unit
+            ChoicesManager.FilterChoicesToUnit(chosenSong.unit);
         } else if (guessCount == 7) {
             // cover
             artworkViewerButton.classList.remove("hidden");
@@ -154,14 +157,14 @@ namespace Game {
         }
     }
 
-    function ViewArtwork() {
+    export function ViewArtwork() {
         artworkDialogue.showModal();
         if (artworkDialogueImg.src != "") {
             artworkDialogueImg.src = chosenSong.GetJacketURL();
         }
     }
 
-    function HideArtwork() {
+    export function HideArtwork() {
         artworkDialogue.close();
     }
 
@@ -242,7 +245,7 @@ namespace Game {
     }
 
     // Artwork image for current song
-    function NewGame() {
+    export function NewGame() {
         if (hasDoneDaily && !unlimitedMode) {
             unlimitedMode = true;
         }
@@ -252,7 +255,6 @@ namespace Game {
         guessList.innerHTML = "";
         hintStatusText.innerText = "";
         hintStatusText.classList.remove("hidden");
-        DeselectSong();
         guessButton.disabled = true;
         artworkDialogueImg.src = "";
         loadingText.innerText = "Loading song. Please wait...";
@@ -262,6 +264,9 @@ namespace Game {
 
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
         guessCount = 0;
+
+        DeselectSong();
+        ChoicesManager.ResetChoices();
 
         if (unlimitedMode) {
             chosenSong = GetRandomSong();
@@ -339,7 +344,9 @@ namespace Game {
 
     // When page loads, get a song
     window.addEventListener("load", () => {
-        ChoicesManager.MakeChoices();
+        winScreen.hidden = false;
+        artworkViewerButton.hidden = false;
+
         NewGame();
 
         CheckLastDoneDate();
@@ -347,5 +354,7 @@ namespace Game {
             guessCount = parseInt(localStorage.getItem(dailyGuessesKey) ?? "0");
             MakeResultsScreen();
         }
+
+        ChoicesManager.MakeChoices();
     });
 }

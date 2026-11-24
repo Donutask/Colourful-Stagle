@@ -5,9 +5,10 @@ namespace ChoicesManager {
 
     //@ts-expect-error Importing with URL, don't have the .td files
     export let choices: Choices | undefined;
+    let choiceList: object[];
 
     export function MakeChoices() {
-        let choiceList: object[] = [];
+        choiceList = [];
         songs.forEach(song => {
             choiceList.push({
                 value: song.id,
@@ -15,6 +16,7 @@ namespace ChoicesManager {
                 customProperties: {
                     title: song.displayName,
                     unit: song.GetUnitDisplayName(),
+                    unitId: song.unit,
                     pronunciation: song.pronunciation,
                     abbreviation: song.GetUnitAbbreviatedName(),
                 },
@@ -40,6 +42,24 @@ namespace ChoicesManager {
         songChoicesElement.addEventListener("change", () => {
             Game.guessButton.innerText = "Guess";
         })
+
+        songChoicesElement.value = "";
+    }
+
+    export function FilterChoicesToUnit(unit: Unit) {
+        //@ts-expect-error Choice is any because no types defined
+        let filteredChoices = choiceList.filter((c) => c.customProperties.unitId == unit);
+
+        choices.clearChoices(true, true)
+        choices.setChoices(filteredChoices);
+    }
+
+    export function ResetChoices() {
+        if (choices != null) {
+            choices.clearChoices(true, true)
+            choices.setChoices(choiceList);
+            songChoicesElement.value = "";
+        }
     }
 
     const sortByLabel = (a: any, b: any) => {

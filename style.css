@@ -223,6 +223,7 @@ button:hover {
 #winText {
     font-size: 3em;
     text-align: center;
+    margin: 0;
 }
 
 .winSticker {
