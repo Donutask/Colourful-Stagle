@@ -7,6 +7,8 @@
     <title>Hatsune Miku: Colourful Stagle!</title>
 
     <link rel="stylesheet" href="style.css">
+    <link href="favicon.ico" rel="icon">
+    <link href="favicon.png" type="image/png" rel="icon">
 
     <!-- This site uses Choices.js for music search -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
@@ -20,7 +22,8 @@
         </header>
         <div class="layoutFlexItem" id="songContent">
             <p id="loadingMusic" class="loadingAnimated">Loading song. Please wait...</p>
-            <audio controls id="audio" hidden></audio>
+            <!-- Non standard controls list attribute to remove download option on Chrome -->
+            <audio controls controlsList="nodownload" id="audio" hidden></audio>
             <div id="hintRow">
                 <p id="status"></p>
                 <button id="viewArtworkButton" class="hidden" onclick="ViewArtwork()">View Artwork</button>
@@ -53,7 +56,9 @@
 
         <div class="layoutFlexItem" id="guessingInterface">
             <search id="searchContainer">
-                <select id="choices"></select>
+
+                <!-- <label for="choices">Choose a song</label> -->
+                <select aria-label="Choose a song" id="choices"></select>
                 <button id="guessButton" class="blueButton" onclick="Guess()">Guess</button>
             </search>
         </div>
