@@ -59,12 +59,12 @@ class Song {
     public GetJacketURL() {
         // jacket ids need leading 0
         let jacketId = this.id < 100 ? "0" + this.id.toString() : this.id.toString();
-        return jacketBaseURL + `jacket_s_${jacketId}/jacket_s_${jacketId}.webp`
+        return Game.jacketBaseURL + `jacket_s_${jacketId}/jacket_s_${jacketId}.webp`
     }
 
     // Short excerpt of the song
     public GetAudioURL() {
-        return musicBaseURL + `${this.assetbundleName}/${this.assetbundleName}_short.mp3`;
+        return Game.musicBaseURL + `${this.assetbundleName}/${this.assetbundleName}_short.mp3`;
     }
 }
 

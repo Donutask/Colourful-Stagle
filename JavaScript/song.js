@@ -49,10 +49,10 @@ class Song {
     }
     GetJacketURL() {
         let jacketId = this.id < 100 ? "0" + this.id.toString() : this.id.toString();
-        return jacketBaseURL + `jacket_s_${jacketId}/jacket_s_${jacketId}.webp`;
+        return Game.jacketBaseURL + `jacket_s_${jacketId}/jacket_s_${jacketId}.webp`;
     }
     GetAudioURL() {
-        return musicBaseURL + `${this.assetbundleName}/${this.assetbundleName}_short.mp3`;
+        return Game.musicBaseURL + `${this.assetbundleName}/${this.assetbundleName}_short.mp3`;
     }
 }
 var Unit;

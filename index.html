@@ -10,7 +10,7 @@
 
     <!-- This site uses Choices.js for music search -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
             <audio controls id="audio" hidden></audio>
             <div id="hintRow">
                 <p id="status"></p>
-                <button id="viewArtworkButton" onclick="ViewArtwork()">View Artwork</button>
+                <button id="viewArtworkButton" class="hidden" onclick="ViewArtwork()">View Artwork</button>
             </div>
         </div>
 
@@ -35,13 +35,13 @@
 
             <div id="winContainer" class="hidden">
                 <div id="winHeaderContainer">
-                    <img class="winSticker" id="winStickerL">
-                    <p id="winText">You got the song in <b>67</b> guesses!</p>
-                    <img class="winSticker" id="winStickerR">
+                    <img class="winSticker" id="winStickerL" width="100">
+                    <p id="winText"></p>
+                    <img class="winSticker" id="winStickerR" width="100">
                 </div>
-                <img id="winSongImg" src="Images/loading_jacket.svg">
+                <img id="winSongImg" src="Images/loading_jacket.svg" width="250" height="250">
 
-                <p id="winSongTitle">Song Name</p>
+                <p id="winSongTitle"></p>
 
                 <div id="dailyContainer">
                     <p>Daily song #<b id="dayLabel"></b></p>
@@ -57,13 +57,12 @@
                 <button id="guessButton" class="blueButton" onclick="Guess()">Guess</button>
             </search>
         </div>
-
-        <footer>
-            <small>This is a non-commercial fan site, unaffiliated with Sega, Colorful Palette, or Crypton. Data
-                from <a href="https://github.com/Sekai-World">Sekai-World</a> & <a
-                    href="https://pjsk.cleista.cc/">Cleista</a>.</small>
-        </footer>
     </div>
+    <footer>
+        <small>This is a non-commercial fan site, unaffiliated with Sega, Colorful Palette, or Crypton. Data
+            from <a href="https://github.com/Sekai-World">Sekai-World</a> & <a
+                href="https://pjsk.cleista.cc/">Cleista</a>.</small>
+    </footer>
 
     <dialog id="jacketViewer">
         <div id="jacketViewerLayout">
