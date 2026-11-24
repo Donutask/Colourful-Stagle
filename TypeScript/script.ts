@@ -33,7 +33,7 @@ namespace Game {
     const dailyGuessesKey = "dailyGuessCount";
 
     // DEBUGGING
-    const testingMode = true;
+    const testingMode = false;
     const loggingMode = false;
 
     // GAME PARAMETERS
