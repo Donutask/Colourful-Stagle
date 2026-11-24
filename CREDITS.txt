@@ -1,0 +1,4 @@
+This is a non-commercial fan site. It is not an official site and is completely unaffiliated with Sega Corporation, Colorful Palette Inc, or Crypton Future Media Inc. All rights belong to respective owners.
+This game sources song data from Sekai DB: https://github.com/Sekai-World/sekai-master-db-en-diff/
+Songs and artwork are provided through Cleista API: https://pjsk.cleista.cc/
+English stickers from MoeSekai: https://pjsk.moe/en-us/sticker/

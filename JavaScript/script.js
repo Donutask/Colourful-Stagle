@@ -25,7 +25,7 @@ const startPlaybackSeconds = 1;
 const gameName = "Colorful Stagle!";
 const dailyCompletionKey = "dailyCompletionDate";
 const dailyGuessesKey = "dailyGuessCount";
-const testingMode = true;
+const testingMode = false;
 const loggingMode = false;
 let chosenSong;
 let guessCount = 0;
@@ -65,7 +65,6 @@ function Guess() {
         else {
             element.textContent = songs.filter(({ id }) => id == songId)[0].displayName;
         }
-        choices.removeChoice(songId);
     }
     guessList.appendChild(element);
     DeselectSong();

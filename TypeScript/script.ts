@@ -32,7 +32,7 @@ const dailyCompletionKey = "dailyCompletionDate";
 const dailyGuessesKey = "dailyGuessCount";
 
 // DEBUGGING
-const testingMode = true;
+const testingMode = false;
 const loggingMode = false;
 
 // GAME PARAMETERS
@@ -84,7 +84,8 @@ function Guess() {
             element.textContent = songs.filter(({ id }) => id == songId)[0].displayName;
         }
 
-        choices.removeChoice(songId);
+        // If I remove them, then it won't be there for next song.
+        // choices.removeChoice(songId);
     }
 
     guessList.appendChild(element);
