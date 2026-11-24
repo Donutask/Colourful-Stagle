@@ -5,9 +5,9 @@ class Song {
     unit: Unit;
     assetbundleName: string;
 
-    constructor(id: number, name: string, pronunciation: string, unit: Unit, assetbundleName: string) {
+    constructor(id: number, name: string, pronunciation: string, unit: string, assetbundleName: string) {
         this.id = id;
-        this.unit = unit;
+        this.unit = unit as Unit;
         this.displayName = name;
         this.pronunciation = pronunciation;
         this.assetbundleName = assetbundleName;

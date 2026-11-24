@@ -103,7 +103,7 @@ var ProcessData;
     function MakeScriptText(songs) {
         let text = "const songs: Song[] = [\n";
         songs.forEach(item => {
-            let line = `new Song(${item.id}, \`${item.displayName}\`, "${item.pronunciation}", "${item.unit}" as Unit, "${item.assetbundleName}"),\n`;
+            let line = `new Song(${item.id}, \`${item.displayName}\`, "${item.pronunciation}", "${item.unit}", "${item.assetbundleName}"),\n`;
             text += line;
         });
         text += "];";
