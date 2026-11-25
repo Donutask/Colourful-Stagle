@@ -34,7 +34,7 @@ namespace Game {
     const dailyGuessesKey = "dailyGuessCount";
 
     // DEBUGGING
-    const testingMode = true;
+    const testingMode = false;
     const loggingMode = false;
 
     // GAME PARAMETERS
@@ -264,7 +264,7 @@ namespace Game {
 
     function ShowTitle() {
         if (unlimitedMode) {
-            gameTitle.textContent = "Unlimited " + gameName;
+            gameTitle.textContent = gameName;
         } else {
             gameTitle.textContent = "Daily " + gameName;
         }

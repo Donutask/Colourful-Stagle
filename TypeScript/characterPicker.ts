@@ -84,8 +84,6 @@ namespace CharacterPicker {
         characterDialogue.showModal();
     }
 
-    characterDialogue.addEventListener("click", () => { characterDialogue.close(); });
-
     // Load chosen when script loads
     let stored = parseInt(localStorage.getItem(characterKey) ?? "0");
     if (stored <= 0 || stored >= 27) {

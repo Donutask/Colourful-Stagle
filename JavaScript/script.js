@@ -27,7 +27,7 @@ var Game;
     const gameName = "Colorful Stagle!";
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
-    const testingMode = true;
+    const testingMode = false;
     const loggingMode = false;
     let chosenSong;
     Game.guessCount = 0;
@@ -232,7 +232,7 @@ var Game;
     Game.NewGame = NewGame;
     function ShowTitle() {
         if (unlimitedMode) {
-            gameTitle.textContent = "Unlimited " + gameName;
+            gameTitle.textContent = gameName;
         }
         else {
             gameTitle.textContent = "Daily " + gameName;

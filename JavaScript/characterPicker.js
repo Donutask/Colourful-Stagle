@@ -71,7 +71,6 @@ var CharacterPicker;
         characterDialogue.showModal();
     }
     CharacterPicker.ShowPicker = ShowPicker;
-    characterDialogue.addEventListener("click", () => { characterDialogue.close(); });
     let stored = parseInt((_a = localStorage.getItem(characterKey)) !== null && _a !== void 0 ? _a : "0");
     if (stored <= 0 || stored >= 27) {
         SetThemeCharacter(21);
