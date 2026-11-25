@@ -4,11 +4,15 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Poppins";
+    src: url("Fonts/Poppins.ttf") format("truetype");
+    font-display: swap;
+}
+
 html {
-    /* https://www.color-hex.com/color-palette/19601 */
     --colour-background: #0b0b0b;
-    --colour-primary: #86cecb;
-    --colour-accent: #e12885;
+    --colour-primary: #33ccbb;
 
     --choices-bg-color: #393939;
     --choices-bg-color-dropdown: #393939;
@@ -20,7 +24,7 @@ html {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--colour-background);
     color: white;
     margin: 0;
@@ -64,12 +68,28 @@ body {
     }
 }
 
+h1,
+h2 {
+    font-family: 'Yuruka', sans-serif;
+}
+
 h1 {
     color: var(--colour-primary);
     text-align: center;
-    font-family: 'Yuruka', sans-serif;
     margin: 0;
     font-size: 2em;
+    flex: 10;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+}
+
+header>button {
+    flex: 1;
 }
 
 @media (max-width: 500px) {
@@ -91,6 +111,7 @@ h1 {
         font-size: 0.75em;
     }
 }
+
 
 #songContent {
     text-align: center;
@@ -151,12 +172,21 @@ h1 {
     margin-right: 10px;
 }
 
-button {
-    cursor: pointer;
+a {
+    color: var(--colour-primary);
     transition: filter 0.5s;
 }
 
-button:hover {
+a:visited {
+    color: var(--colour-primary);
+}
+
+button {
+    cursor: pointer;
+}
+
+a:hover,
+.blueButton:hover {
     filter: brightness(120%);
 }
 
@@ -166,6 +196,7 @@ button:hover {
     background-color: var(--colour-primary);
     border: none;
     border-radius: 5px;
+    transition: filter 0.5s;
 }
 
 #guessButton {
@@ -181,8 +212,7 @@ button:hover {
     gap: 10px;
 }
 
-
-#jacketViewer {
+dialog {
     background-color: #393939;
     color: white;
     text-align: center;
@@ -263,6 +293,52 @@ button:hover {
     margin: 15px;
 }
 
+dialog>h2 {
+    margin: 0;
+}
+
+#charactersContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 10px;
+}
+
+.characterPickerButton {
+    background: none;
+    border: none;
+}
+
+.characterPickerButtonImage {
+    width: 90px;
+    padding: 2px;
+}
+
+#aboutDialogue {
+    max-height: 600px;
+    height: 90%;
+    /* display: flex;
+    flex-direction: column; */
+    padding: 20px;
+}
+
+#aboutDetails {
+    text-align: left;
+    width: 600px;
+    max-width: 100%;
+    padding: 10px;
+    flex: 10;
+}
+
+#aboutDialogue>button {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+#aboutDialogue>p {
+    font-size: larger;
+    margin: 0;
+}
+
 *,
 ::after,
 ::before {
@@ -282,4 +358,8 @@ footer {
 footer a,
 footer a:visited {
     color: #aaa;
+}
+
+small {
+    font-size: 0.7em;
 }

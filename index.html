@@ -19,7 +19,9 @@
 <body>
     <div id="content">
         <header class="layoutFlexItem">
+            <button id="aboutButton" onclick="Game.aboutDialogue.showModal();">About</button>
             <h1 id="title">Colorful Stagle!</h1>
+            <button id="characterPickerButton" onclick="CharacterPicker.ShowPicker()">Character</button>
         </header>
         <div class="layoutFlexItem" id="songContent">
             <p id="loadingMusic" class="loadingAnimated">Loading song. Please wait...</p>
@@ -75,10 +77,72 @@
         </div>
     </dialog>
 
+    <dialog id="characterPicker">
+        <h2>Choose your fav</h2>
+        <p>This just changes the colours and stickers.</p>
+        <div id="charactersContainer">
+
+        </div>
+    </dialog>
+
+    <dialog id="aboutDialogue">
+        <h2>About Colorful Stagle</h2>
+        <p>Guess the name of the song from <i>Hatsune Miku: Colourful Stage!</i></p>
+        <div id="aboutDetails">
+            <h3>How To Play</h3>
+            <p>You get 9 attempts to name the <i>Colorful Stage</i> song.</p>
+            <p>Click the play button at the top to start listening. The audio is a short excerpt from the song,
+                usually the chorus. You start with only 1 second of audio. Each incorrect guess will let you listen to
+                more of
+                the song. After unlocking the full excerpt, incorrect guesses will give additional hints.
+
+            <h3>Hint Details</h3>
+            <ul>
+                <li>1 Guess: +2 seconds (3s total)</li>
+                <li>2 Guesses: +2 seconds (5s total)</li>
+                <li>3 Guesses: +5 seconds (10s total)</li>
+                <li>4 Guesses: +5 seconds (15s total)</li>
+                <li>5 Guesses: Full Excerpt</li>
+                <li>6 Guesses: Name of the Unit (Group)</li>
+                <li>7 Guesses: Option to view the song's artwork (jacket)</li>
+                <li>9 Guesses: Game Over</li>
+            </ul>
+
+            <h3>Searching</h3>
+            <p>The search bar at the bottom has all songs in alphabetical order. You do not have to be exact when
+                searching and do not have to type special characters. You can type in the unit name (e.g.
+                More More Jump) or it's abbreviation (e.g. mmj) to show songs by that unit. </p>
+
+            <h3>Song Details</h3>
+            <p>This game uses all songs from the English (Global) server. The song names may not match the names on the
+                Japanese server.</p>
+            <p id="lastUpdated"></p>
+
+            <h3>Contact</h3>
+            <a href="mailto:contact@donutask.com">contact@donutask.com</a>
+
+            <h3>Credits</h3>
+            <p>This is a non-commercial fan site. It is not an official site and is completely unaffiliated with
+                Sega Corporation, Colorful Palette Inc, or Crypton Future Media Inc. All rights belong to respective
+                owners.
+            </p>
+            <p>This game sources song data from <a href="https://github.com/Sekai-World/sekai-master-db-en-diff/">Sekai
+                    DB by Sekai World</a>
+            </p>
+            <p>Songs and artwork are streamed through the <a href="https://pjsk.cleista.cc/">Cleista API</a></p>
+            <p>English stickers downloaded from <a href="https://pjsk.moe/en-us/sticker/">MoeSekai</a></p>
+            <p>Song search uses <a href="https://github.com/Choices-js/Choices">Choices.js</a></p>
+        </div>
+        <button class="blueButton" onclick="Game.aboutDialogue.close();">Close</button>
+    </dialog>
+
     <!-- Game Scripts -->
     <script src="JavaScript/song.js"></script>
     <script src="JavaScript/songList.js"></script>
     <script src="JavaScript/randomSongIds.js"></script>
+    <script src="JavaScript/character.js"></script>
+    <script src="JavaScript/characterList.js"></script>
+    <script src="JavaScript/characterPicker.js"></script>
     <script src="JavaScript/script.js"></script>
     <script src="JavaScript/choices.js"></script>
 </body>

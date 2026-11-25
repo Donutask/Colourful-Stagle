@@ -1,3 +1,4 @@
+const SONGS_LAST_UPDATED = "24/11/2026"
 const songs: Song[] = [
     new Song(1, `Tell Your World`, "tellyourworld", "vocaloid", "0001_01"),
     new Song(2, `ROKI`, "roki", "light_music_club", "0002_02"),

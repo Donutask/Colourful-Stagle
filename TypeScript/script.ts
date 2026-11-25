@@ -1,5 +1,6 @@
 namespace Game {
     // HTML ELEMENTS
+    const contentContainer = document.getElementById("content") as HTMLElement;
     const gameScreen = document.getElementById("gameContainer") as HTMLElement;
     const gameTitle = document.getElementById("title") as HTMLElement;
     const guessInterface = document.getElementById("guessingInterface") as HTMLElement;
@@ -17,12 +18,12 @@ namespace Game {
     const winHeading = document.getElementById("winText") as HTMLElement;
     const winImage = document.getElementById("winSongImg") as HTMLImageElement;
     const winTitle = document.getElementById("winSongTitle") as HTMLElement;
-    const stickerImageL = document.getElementById("winStickerL") as HTMLImageElement;
-    const stickerImageR = document.getElementById("winStickerR") as HTMLImageElement;
 
     const dailyContainer = document.getElementById("dailyContainer") as HTMLElement;
     const playAgainButton = document.getElementById("newGame") as HTMLButtonElement;
     const dailyDayLabel = document.getElementById("dayLabel") as HTMLElement;
+
+    export const aboutDialogue = document.getElementById("aboutDialogue") as HTMLDialogElement;
 
     // CONSTANTS
     export const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
@@ -33,18 +34,16 @@ namespace Game {
     const dailyGuessesKey = "dailyGuessCount";
 
     // DEBUGGING
-    const testingMode = false;
+    const testingMode = true;
     const loggingMode = false;
 
     // GAME PARAMETERS
     let chosenSong: Song;
-    let guessCount: number = 0;
+    export let guessCount: number = 0;
     let currentAllowedPlaybackSeconds = 1;
-    // True: run out guesses. False: guessed correctly. Only checked on the results screen.
-    // let failed = false;
     let unlimitedMode = false;
-    // This is not stored yet
     let hasDoneDaily = false;
+
 
     // Day since release of game
     function GetDay() {
@@ -174,6 +173,7 @@ namespace Game {
         winScreen.classList.remove("hidden");
         artworkViewerButton.classList.add("hidden");
         hintStatusText.classList.add("hidden");
+        contentContainer.style.setProperty("height", "100%");
 
         currentAllowedPlaybackSeconds = 9999;
         hintStatusText.innerHTML = "";
@@ -193,10 +193,7 @@ namespace Game {
         winTitle.textContent = chosenSong.displayName;
         winImage.src = chosenSong.GetJacketURL();
 
-        let stickerURL = ChooseSticker();
-        stickerImageL.src = stickerURL;
-        stickerImageR.src = stickerURL;
-
+        CharacterPicker.SetStickers();
 
         if (unlimitedMode) {
             dailyContainer.classList.add("hidden");
@@ -213,35 +210,6 @@ namespace Game {
                 hasDoneDaily = true;
             }
         }
-    }
-
-    function ChooseSticker(): string {
-        const baseURL = "Images/stickers/emu/";
-        let fileName = "";
-
-        if (guessCount == 1) {
-            fileName = "wonderhoy";
-        }
-        else if (guessCount == 2) {
-            fileName = "yay-yay";
-        }
-        else if (guessCount == 3) {
-            fileName = "hurray-hurray";
-        }
-        else if (guessCount == 4 || guessCount == 5) {
-            fileName = "that-was-fun";
-        }
-        else if (guessCount >= 6 && guessCount <= 8) {
-            fileName = "mmmmm";
-        }
-        else if (guessCount >= 9) {
-            fileName = "gotta-study";
-        }
-        else {
-            fileName = "whaaat";
-        }
-
-        return baseURL + fileName + ".png";
     }
 
     // Artwork image for current song
@@ -261,6 +229,7 @@ namespace Game {
         loadingText.classList.remove("hidden");
         loadingText.classList.add("loadingAnimated")
         artworkViewerButton.classList.add("hidden");
+        contentContainer.style.setProperty("height", "100dvh");
 
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
         guessCount = 0;
@@ -344,6 +313,7 @@ namespace Game {
 
     // When page loads, get a song
     window.addEventListener("load", () => {
+        // some elements hidden from DOM when page is loading
         winScreen.hidden = false;
         artworkViewerButton.hidden = false;
 
@@ -357,4 +327,6 @@ namespace Game {
 
         ChoicesManager.MakeChoices();
     });
+
+    (document.getElementById("lastUpdated") as HTMLElement).innerText = "Song List Last Updated: " + SONGS_LAST_UPDATED;
 }

@@ -1,3 +1,4 @@
+// Ai was used to convert the JSON file schemas into these TypeScript classes
 class Music {
     constructor(
         public id: number,

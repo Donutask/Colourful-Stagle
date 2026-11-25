@@ -101,7 +101,7 @@ var ProcessData;
     }
     ProcessData_1.MakeAndDownloadFile = MakeAndDownloadFile;
     function MakeScriptText(songs) {
-        let text = "const songs: Song[] = [\n";
+        let text = `const SONGS_LAST_UPDATED = "${new Date().toDateString()}";\nconst songs: Song[] = [\n`;
         songs.forEach(item => {
             let line = `new Song(${item.id}, \`${item.displayName}\`, "${item.pronunciation}", "${item.unit}", "${item.assetbundleName}"),\n`;
             text += line;

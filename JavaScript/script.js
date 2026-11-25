@@ -1,6 +1,7 @@
 "use strict";
 var Game;
 (function (Game) {
+    const contentContainer = document.getElementById("content");
     const gameScreen = document.getElementById("gameContainer");
     const gameTitle = document.getElementById("title");
     const guessInterface = document.getElementById("guessingInterface");
@@ -16,21 +17,20 @@ var Game;
     const winHeading = document.getElementById("winText");
     const winImage = document.getElementById("winSongImg");
     const winTitle = document.getElementById("winSongTitle");
-    const stickerImageL = document.getElementById("winStickerL");
-    const stickerImageR = document.getElementById("winStickerR");
     const dailyContainer = document.getElementById("dailyContainer");
     const playAgainButton = document.getElementById("newGame");
     const dailyDayLabel = document.getElementById("dayLabel");
+    Game.aboutDialogue = document.getElementById("aboutDialogue");
     Game.musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
     Game.jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
     const startPlaybackSeconds = 1;
     const gameName = "Colorful Stagle!";
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
-    const testingMode = false;
+    const testingMode = true;
     const loggingMode = false;
     let chosenSong;
-    let guessCount = 0;
+    Game.guessCount = 0;
     let currentAllowedPlaybackSeconds = 1;
     let unlimitedMode = false;
     let hasDoneDaily = false;
@@ -47,8 +47,8 @@ var Game;
         return songs[Math.floor(Math.random() * songs.length)];
     }
     function Guess() {
-        guessCount++;
-        if (guessCount >= 9) {
+        Game.guessCount++;
+        if (Game.guessCount >= 9) {
             MakeResultsScreen();
             return;
         }
@@ -81,25 +81,25 @@ var Game;
         Game.guessButton.innerText = "Skip";
     }
     function GrantHints() {
-        if (guessCount == 1) {
+        if (Game.guessCount == 1) {
             currentAllowedPlaybackSeconds += 2;
         }
-        else if (guessCount == 2) {
+        else if (Game.guessCount == 2) {
             currentAllowedPlaybackSeconds += 2;
         }
-        else if (guessCount == 3) {
+        else if (Game.guessCount == 3) {
             currentAllowedPlaybackSeconds += 5;
         }
-        else if (guessCount == 4) {
+        else if (Game.guessCount == 4) {
             currentAllowedPlaybackSeconds += 5;
         }
-        else if (guessCount == 5) {
+        else if (Game.guessCount == 5) {
             currentAllowedPlaybackSeconds = Math.ceil(audioPlayer.duration);
         }
-        else if (guessCount == 6) {
+        else if (Game.guessCount == 6) {
             ChoicesManager.FilterChoicesToUnit(chosenSong.unit);
         }
-        else if (guessCount == 7) {
+        else if (Game.guessCount == 7) {
             artworkViewerButton.classList.remove("hidden");
             artworkDialogueImg.src = chosenSong.GetJacketURL();
         }
@@ -107,25 +107,25 @@ var Game;
     }
     function UpdateHintsStatus() {
         const firstPart = `You can listen to the first ${currentAllowedPlaybackSeconds}s. `;
-        if (guessCount == 0 || guessCount == 1) {
+        if (Game.guessCount == 0 || Game.guessCount == 1) {
             hintStatusText.innerText = `You can listen to the first second. Next guess will give +2s`;
         }
-        else if (guessCount == 2 || guessCount == 3) {
+        else if (Game.guessCount == 2 || Game.guessCount == 3) {
             hintStatusText.innerText = firstPart + `Next guess will give +5s`;
         }
-        else if (guessCount == 4) {
+        else if (Game.guessCount == 4) {
             hintStatusText.innerText = firstPart + `Next guess will give the full excerpt.`;
         }
-        else if (guessCount == 5) {
+        else if (Game.guessCount == 5) {
             hintStatusText.innerText = `You can listen to the full excerpt. Next guess will give the unit.`;
         }
-        else if (guessCount == 6) {
+        else if (Game.guessCount == 6) {
             hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will give the artwork.`;
         }
-        else if (guessCount == 7) {
+        else if (Game.guessCount == 7) {
             hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. 2 guesses until end of round.`;
         }
-        else if (guessCount == 8) {
+        else if (Game.guessCount == 8) {
             hintStatusText.innerText = `Unit: ${chosenSong.GetUnitDisplayName()}. Next guess will end the round.`;
         }
         else {
@@ -149,27 +149,26 @@ var Game;
         winScreen.classList.remove("hidden");
         artworkViewerButton.classList.add("hidden");
         hintStatusText.classList.add("hidden");
+        contentContainer.style.setProperty("height", "100%");
         currentAllowedPlaybackSeconds = 9999;
         hintStatusText.innerHTML = "";
-        if (guessCount >= 9) {
+        if (Game.guessCount >= 9) {
             winHeading.innerHTML = `The song was...`;
         }
         else {
-            if (guessCount == 1) {
+            if (Game.guessCount == 1) {
                 winHeading.innerHTML = 'You got the song in just one guess!';
             }
-            else if (guessCount <= 0) {
-                winHeading.innerHTML = `You somehow got the song in <b>${guessCount}</b> guesses.`;
+            else if (Game.guessCount <= 0) {
+                winHeading.innerHTML = `You somehow got the song in <b>${Game.guessCount}</b> guesses.`;
             }
             else {
-                winHeading.innerHTML = `You got the song in <b>${guessCount}</b> guesses` + (guessCount <= 5 ? "!" : ".");
+                winHeading.innerHTML = `You got the song in <b>${Game.guessCount}</b> guesses` + (Game.guessCount <= 5 ? "!" : ".");
             }
         }
         winTitle.textContent = chosenSong.displayName;
         winImage.src = chosenSong.GetJacketURL();
-        let stickerURL = ChooseSticker();
-        stickerImageL.src = stickerURL;
-        stickerImageR.src = stickerURL;
+        CharacterPicker.SetStickers();
         if (unlimitedMode) {
             dailyContainer.classList.add("hidden");
             playAgainButton.textContent = "New Song";
@@ -180,36 +179,10 @@ var Game;
             playAgainButton.textContent = "Play Unlimited";
             if (!hasDoneDaily) {
                 localStorage.setItem(dailyCompletionKey, new Date().toISOString());
-                localStorage.setItem(dailyGuessesKey, guessCount.toString());
+                localStorage.setItem(dailyGuessesKey, Game.guessCount.toString());
                 hasDoneDaily = true;
             }
         }
-    }
-    function ChooseSticker() {
-        const baseURL = "Images/stickers/emu/";
-        let fileName = "";
-        if (guessCount == 1) {
-            fileName = "wonderhoy";
-        }
-        else if (guessCount == 2) {
-            fileName = "yay-yay";
-        }
-        else if (guessCount == 3) {
-            fileName = "hurray-hurray";
-        }
-        else if (guessCount == 4 || guessCount == 5) {
-            fileName = "that-was-fun";
-        }
-        else if (guessCount >= 6 && guessCount <= 8) {
-            fileName = "mmmmm";
-        }
-        else if (guessCount >= 9) {
-            fileName = "gotta-study";
-        }
-        else {
-            fileName = "whaaat";
-        }
-        return baseURL + fileName + ".png";
     }
     function NewGame() {
         if (hasDoneDaily && !unlimitedMode) {
@@ -226,8 +199,9 @@ var Game;
         loadingText.classList.remove("hidden");
         loadingText.classList.add("loadingAnimated");
         artworkViewerButton.classList.add("hidden");
+        contentContainer.style.setProperty("height", "100dvh");
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
-        guessCount = 0;
+        Game.guessCount = 0;
         DeselectSong();
         ChoicesManager.ResetChoices();
         if (unlimitedMode) {
@@ -302,9 +276,10 @@ var Game;
         NewGame();
         CheckLastDoneDate();
         if (hasDoneDaily) {
-            guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
+            Game.guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
             MakeResultsScreen();
         }
         ChoicesManager.MakeChoices();
     });
+    document.getElementById("lastUpdated").innerText = "Song List Last Updated: " + SONGS_LAST_UPDATED;
 })(Game || (Game = {}));
