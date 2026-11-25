@@ -258,16 +258,6 @@ namespace Game {
         guessInterface.classList.remove("hidden");
         winScreen.classList.add("hidden");
         winImage.src = "Images/loading_jacket.svg"
-
-        ShowTitle();
-    }
-
-    function ShowTitle() {
-        if (unlimitedMode) {
-            gameTitle.textContent = gameName;
-        } else {
-            gameTitle.textContent = "Daily " + gameName;
-        }
     }
 
     function CheckLastDoneDate() {
