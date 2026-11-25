@@ -1,11 +1,10 @@
 "use strict";
 class Character {
-    constructor(characterId, fullName, shortName, colour, unit, hasStickers = false) {
+    constructor(characterId, fullName, shortName, colour, unit) {
         this.characterId = characterId;
         this.fullName = fullName;
         this.shortName = shortName;
         this.colour = colour;
-        this.hasStickers = hasStickers;
         this.unit = unit;
     }
     GetCharacterImageURL() {

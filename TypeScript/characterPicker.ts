@@ -36,7 +36,7 @@ namespace CharacterPicker {
     function ChooseSticker(guessCount: number): string {
 
         let stickerCharacter: Character;
-        if (chosenCharacter.hasStickers) {
+        if (chosenCharacter) {
             stickerCharacter = chosenCharacter;
         } else {
             // Use Miku if it doesn't have stickers.

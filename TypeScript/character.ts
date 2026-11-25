@@ -6,7 +6,6 @@ class Character {
         public shortName: string,
         public colour: string,
         unit: string,
-        public hasStickers: boolean = false,
     ) {
         this.unit = unit as Unit;
     }

@@ -29,7 +29,7 @@ var CharacterPicker;
     CharacterPicker.SetStickers = SetStickers;
     function ChooseSticker(guessCount) {
         let stickerCharacter;
-        if (chosenCharacter.hasStickers) {
+        if (chosenCharacter) {
             stickerCharacter = chosenCharacter;
         }
         else {
