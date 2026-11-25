@@ -69,6 +69,7 @@ class Song {
 }
 
 // Band/group
+// These are the internal names used in musicTags.json files
 enum Unit {
     all = "all",
     other = "other",

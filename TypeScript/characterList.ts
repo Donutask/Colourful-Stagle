@@ -1,4 +1,5 @@
 // Ai was used to turn JSON data into usable Character objects.
+// note: character unit names in source differ from song tag unit names, they have been changed to conform.
 const characters: Character[] = [
     // Leo/need
     new Character(1, "Hoshino Ichika", "Ichika", "#33aaee", "light_music_club"),
