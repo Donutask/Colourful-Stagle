@@ -2,6 +2,8 @@ namespace CharacterPicker {
     const characterDialogue = document.getElementById("characterPicker") as HTMLDialogElement;
     const charactersContainer = document.getElementById("charactersContainer") as HTMLElement;
 
+    const metaThemeColour = document.getElementById("metaThemeColour") as HTMLMetaElement;
+
     const stickerImageL = document.getElementById("winStickerL") as HTMLImageElement;
     const stickerImageR = document.getElementById("winStickerR") as HTMLImageElement;
 
@@ -17,6 +19,7 @@ namespace CharacterPicker {
 
         chosenCharacter = character;
         document.documentElement.style.setProperty("--colour-primary", character.colour);
+        metaThemeColour.content = character.colour;
 
         SetStickers();
 

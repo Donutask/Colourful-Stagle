@@ -4,6 +4,7 @@ var CharacterPicker;
     var _a;
     const characterDialogue = document.getElementById("characterPicker");
     const charactersContainer = document.getElementById("charactersContainer");
+    const metaThemeColour = document.getElementById("metaThemeColour");
     const stickerImageL = document.getElementById("winStickerL");
     const stickerImageR = document.getElementById("winStickerR");
     const characterKey = "chosenCharacter";
@@ -13,6 +14,7 @@ var CharacterPicker;
         const character = characters[characterId - 1];
         chosenCharacter = character;
         document.documentElement.style.setProperty("--colour-primary", character.colour);
+        metaThemeColour.content = character.colour;
         SetStickers();
         localStorage.setItem(characterKey, characterId.toString());
     }
