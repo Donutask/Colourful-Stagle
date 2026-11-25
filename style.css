@@ -1,12 +1,12 @@
 @font-face {
     font-family: "Yuruka";
-    src: url("Fonts/Yuruka.ttf") format("truetype");
+    src: url("Fonts/Yuruka-English.woff2") format("woff2");
     font-display: swap;
 }
 
 @font-face {
     font-family: "Poppins";
-    src: url("Fonts/Poppins.ttf") format("truetype");
+    src: url("Fonts/Poppins-Small.woff2") format("woff2");
     font-display: swap;
 }
 
