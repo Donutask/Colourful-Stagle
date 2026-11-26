@@ -237,7 +237,7 @@ dialog {
 }
 
 #winText {
-    font-size: 3em;
+    font-size: 2.7em;
     text-align: center;
     margin: 0;
 }
@@ -245,12 +245,6 @@ dialog {
 .winSticker {
     width: 25%;
     max-width: 100px;
-}
-
-@media (max-width: 600px) {
-    .winSticker {
-        display: none;
-    }
 }
 
 #winStickerL {
@@ -301,11 +295,21 @@ dialog>h2 {
 }
 
 #aboutDialogue {
-    max-height: 600px;
     height: 90%;
-    /* display: flex;
-    flex-direction: column; */
     padding: 20px;
+}
+
+#aboutLayout {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    gap: 10px;
+    align-items: center;
+}
+
+#aboutLayout>p {
+    font-size: larger;
+    margin: 0;
 }
 
 #aboutDetails {
@@ -314,16 +318,32 @@ dialog>h2 {
     max-width: 100%;
     padding: 10px;
     flex: 10;
+    max-height: 100%;
+    overflow: auto;
 }
 
-#aboutDialogue>button {
+#aboutLayout>button {
     width: fit-content;
-    margin: 0 auto;
 }
 
-#aboutDialogue>p {
-    font-size: larger;
-    margin: 0;
+#unitFilterDialogue {
+    width: 90%;
+    max-width: 400px;
+}
+
+#unitFilterOptionsLayout {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.unitFilterLabel {
+    font-size: 1.4em;
+}
+
+.unitFilterIcon {
+    width: 20px;
+    vertical-align: middle;
 }
 
 *,
@@ -352,9 +372,27 @@ small {
 }
 
 
+@media (max-width: 700px) {
+    #winText {
+        font-size: min(6vw, 2em);
+    }
+}
+
 @media (max-width: 500px) {
     h1 {
         font-size: 1.5em;
+    }
+
+    #winText {
+        text-align: left;
+    }
+
+    #winStickerL {
+        width: 40%;
+    }
+
+    #winStickerR {
+        display: none;
     }
 
     #guessButton {

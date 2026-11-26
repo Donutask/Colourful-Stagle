@@ -21,6 +21,8 @@ var Game;
     const playAgainButton = document.getElementById("newGame");
     const dailyDayLabel = document.getElementById("dayLabel");
     Game.aboutDialogue = document.getElementById("aboutDialogue");
+    const unitFilterButton = document.getElementById("unitFilterButton");
+    const unitFilterDialogue = document.getElementById("unitFilterDialogue");
     Game.musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
     Game.jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
     const startPlaybackSeconds = 1;
@@ -45,7 +47,7 @@ var Game;
     }
     function GetRandomSong() {
         let songsToSelectFrom;
-        if (unitFilters != null) {
+        if (unitFilters != null && unitFilters.length > 0) {
             songsToSelectFrom = GetFilteredSongs();
         }
         else {
@@ -57,7 +59,6 @@ var Game;
         return songs.filter(({ unit }) => unitFilters.includes(unit));
     }
     function TestFiltering() {
-        unitFilters = [Unit.idol];
         const songs = GetFilteredSongs();
         console.log(songs);
     }
@@ -159,6 +160,54 @@ var Game;
         artworkDialogue.close();
     }
     Game.HideArtwork = HideArtwork;
+    let toggleAllState;
+    function OpenSongFilter() {
+        toggleAllState = unitFilters.length > 0;
+        document.getElementById("unitFilterToggleAll").checked = !toggleAllState;
+        const checkboxes = document.getElementsByName('unitFilter');
+        checkboxes.forEach(checkbox => {
+            const element = checkbox;
+            if (unitFilters.length <= 0 || unitFilters.includes(element.value)) {
+                element.checked = true;
+            }
+            else {
+                element.checked = false;
+            }
+        });
+        unitFilterDialogue.showModal();
+    }
+    Game.OpenSongFilter = OpenSongFilter;
+    function CloseSongFilter() {
+        const checkboxes = document.getElementsByName('unitFilter');
+        unitFilters = [];
+        checkboxes.forEach(checkbox => {
+            const element = checkbox;
+            if (element.checked) {
+                unitFilters.push(element.value);
+            }
+        });
+        if (unitFilters.length > 0) {
+            if (unitFilters.length == 1 && unitFilters[0] == Unit.other) {
+            }
+            else {
+                unitFilters.push(Unit.all);
+            }
+            if (unitFilters.length >= 8) {
+                unitFilters = [];
+            }
+        }
+        unitFilterDialogue.close();
+    }
+    Game.CloseSongFilter = CloseSongFilter;
+    function SongFilterToggleAll() {
+        const checkboxes = document.getElementsByName('unitFilter');
+        checkboxes.forEach(checkbox => {
+            const element = checkbox;
+            element.checked = toggleAllState;
+        });
+        toggleAllState = !toggleAllState;
+    }
+    Game.SongFilterToggleAll = SongFilterToggleAll;
     function MakeResultsScreen() {
         gameScreen.classList.add("hidden");
         guessInterface.classList.add("hidden");
@@ -252,6 +301,12 @@ var Game;
             audioPlayer.src = chosenSong.GetAudioURL();
         }
         audioPlayer.currentTime = 0;
+        if (unlimitedMode) {
+            unitFilterButton.classList.remove("hidden");
+        }
+        else {
+            unitFilterButton.classList.add("hidden");
+        }
         gameScreen.classList.remove("hidden");
         guessInterface.classList.remove("hidden");
         winScreen.classList.add("hidden");

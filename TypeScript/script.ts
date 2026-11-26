@@ -25,6 +25,9 @@ namespace Game {
 
     export const aboutDialogue = document.getElementById("aboutDialogue") as HTMLDialogElement;
 
+    const unitFilterButton = document.getElementById("unitFilterButton") as HTMLButtonElement;
+    const unitFilterDialogue = document.getElementById("unitFilterDialogue") as HTMLDialogElement;
+
     // CONSTANTS
     export const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
     export const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/"
@@ -60,7 +63,7 @@ namespace Game {
 
     function GetRandomSong(): Song {
         let songsToSelectFrom;
-        if (unitFilters != null) {
+        if (unitFilters != null && unitFilters.length > 0) {
             songsToSelectFrom = GetFilteredSongs();
         } else {
             songsToSelectFrom = songs;
@@ -74,8 +77,6 @@ namespace Game {
     }
 
     export function TestFiltering() {
-        unitFilters = [Unit.idol];
-
         const songs = GetFilteredSongs();
         console.log(songs);
     }
@@ -186,6 +187,61 @@ namespace Game {
         artworkDialogue.close();
     }
 
+    let toggleAllState: boolean;
+    export function OpenSongFilter() {
+        toggleAllState = unitFilters.length > 0;
+        (document.getElementById("unitFilterToggleAll") as HTMLInputElement).checked = !toggleAllState;
+
+        const checkboxes = document.getElementsByName('unitFilter');
+
+        checkboxes.forEach(checkbox => {
+            const element = checkbox as HTMLInputElement;
+            if (unitFilters.length <= 0 || unitFilters.includes(element.value as Unit)) {
+                element.checked = true;
+            } else {
+                element.checked = false;
+            }
+        });
+        unitFilterDialogue.showModal();
+    }
+
+    export function CloseSongFilter() {
+        const checkboxes = document.getElementsByName('unitFilter');
+
+        unitFilters = [];
+        checkboxes.forEach(checkbox => {
+            const element = checkbox as HTMLInputElement;
+            if (element.checked) {
+                unitFilters.push(element.value as Unit);
+            }
+        });
+
+        if (unitFilters.length > 0) {
+            if (unitFilters.length == 1 && unitFilters[0] == Unit.other) {
+                // Exclude mixed songs from those not by the main groups
+            } else {
+                unitFilters.push(Unit.all);
+            }
+
+            // All filters on, so not actually filtering
+            if (unitFilters.length >= 8) {
+                unitFilters = [];
+            }
+        }
+
+        unitFilterDialogue.close();
+    }
+    export function SongFilterToggleAll() {
+        const checkboxes = document.getElementsByName('unitFilter');
+
+        checkboxes.forEach(checkbox => {
+            const element = checkbox as HTMLInputElement;
+            element.checked = toggleAllState;
+        });
+
+        toggleAllState = !toggleAllState;
+    }
+
     function MakeResultsScreen() {
         gameScreen.classList.add("hidden");
         guessInterface.classList.add("hidden");
@@ -277,7 +333,6 @@ namespace Game {
         }
         if (loggingMode) { console.log(chosenSong); }
 
-
         if (testingMode) {
             gameTitle.textContent = "Test Mode";
             audioPlayer.src = "Audio/hello_world.mp3";
@@ -285,6 +340,12 @@ namespace Game {
             audioPlayer.src = chosenSong.GetAudioURL();
         }
         audioPlayer.currentTime = 0;
+
+        if (unlimitedMode) {
+            unitFilterButton.classList.remove("hidden");
+        } else {
+            unitFilterButton.classList.add("hidden");
+        }
 
         gameScreen.classList.remove("hidden");
         guessInterface.classList.remove("hidden");
