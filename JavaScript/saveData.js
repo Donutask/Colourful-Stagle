@@ -1,1 +1,1 @@
-class c{constructor(s,u){this.guesses=s;this.dailyDay=u}}
+class SaveData{constructor(currentRound,chosenCharacter,unitFilter){this.currentRound=currentRound;this.chosenCharacter=chosenCharacter;this.unitFilter=unitFilter}}class RoundData{constructor(guesses,songID,isUnlimited){this.guesses=guesses;this.songID=songID;this.isUnlimited=isUnlimited}}

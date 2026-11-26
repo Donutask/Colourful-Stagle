@@ -6,6 +6,6 @@
     "esbuild": "^0.28.2"
   },
   "scripts": {
-    "build": "tsc --noEmit && esbuild \"TypeScript/**/*.ts\" --minify --outdir=JavaScript --format=esm"
+    "build": "tsc --noEmit && esbuild \"TypeScript/**/*.ts\" --minify-whitespace --minify-syntax --outdir=JavaScript --format=esm"
   }
 }
