@@ -25,7 +25,7 @@
                 <img class="headerButtonImg" src="Images/ui_icons/info.svg" alt="About">
             </button>
             <h1 id="title">Colorful Stagle!</h1>
-            <button class="headerButton" id="unitFilterButton" onclick="Game.OpenSongFilter()">
+            <button class="headerButton" id="unitFilterButton" onclick="SongFilter.OpenSongFilter()">
                 <img class="headerButtonImg" src="Images/ui_icons/playlist.svg" alt="Song Selection">
             </button>
             <button class="headerButton" id="characterPickerButton" onclick="CharacterPicker.ShowPicker()">
@@ -88,12 +88,10 @@
 
     <dialog id="unitFilterDialogue">
         <h2>Song Filter</h2>
-        <p>Select the units whose songs will be chosen in unlimited mode. This will take effect on the next round.
-            Selecting nothing will
-            choose any song (same effect as selecting everything).</p>
+        <p>Select units whose songs will be chosen in unlimited mode. Takes effect next round.</p>
 
         <label>
-            <input id="unitFilterToggleAll" type="checkbox" onchange="Game.SongFilterToggleAll()">
+            <input id="unitFilterToggleAll" type="checkbox" onchange="SongFilter.SongFilterToggleAll()">
             Toggle all
         </label>
 
@@ -134,7 +132,7 @@
                 Other
             </label>
         </form>
-        <button class="blueButton" onclick="Game.CloseSongFilter()">Confirm</button>
+        <button class="blueButton" onclick="SongFilter.CloseSongFilter()">Confirm</button>
     </dialog>
 
     <dialog id="characterPicker">
@@ -218,6 +216,7 @@
     <script src="JavaScript/song.js"></script>
     <script src="JavaScript/songList.js"></script>
     <script src="JavaScript/randomSongIds.js"></script>
+    <script src="JavaScript/songFilter.js"></script>
     <script src="JavaScript/character.js"></script>
     <script src="JavaScript/characterList.js"></script>
     <script src="JavaScript/characterPicker.js"></script>

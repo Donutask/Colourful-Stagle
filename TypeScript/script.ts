@@ -26,7 +26,6 @@ namespace Game {
     export const aboutDialogue = document.getElementById("aboutDialogue") as HTMLDialogElement;
 
     const unitFilterButton = document.getElementById("unitFilterButton") as HTMLButtonElement;
-    const unitFilterDialogue = document.getElementById("unitFilterDialogue") as HTMLDialogElement;
 
     // CONSTANTS
     export const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
@@ -35,7 +34,7 @@ namespace Game {
 
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
-    const unitFilterKey = "unitFilters";
+    export const unitFilterKey = "unitFilters";
 
     // DEBUGGING
     const testingMode = true;
@@ -47,7 +46,6 @@ namespace Game {
     let currentAllowedPlaybackSeconds = 1;
     let unlimitedMode = false;
     let hasDoneDaily = false;
-    let unitFilters: Unit[] = [];
 
 
     // Day since release of game
@@ -64,17 +62,12 @@ namespace Game {
 
     function GetRandomSong(): Song {
         let songsToSelectFrom;
-        if (unitFilters != null && unitFilters.length > 0) {
-            songsToSelectFrom = GetFilteredSongs();
+        if (SongFilter.HasFilter()) {
+            songsToSelectFrom = SongFilter.GetFilteredSongs();
         } else {
             songsToSelectFrom = songs;
         }
         return songsToSelectFrom[Math.floor(Math.random() * songsToSelectFrom.length)];
-    }
-
-    // Only songs from specific unit
-    function GetFilteredSongs(): Song[] {
-        return songs.filter(({ unit }) => unitFilters.includes(unit));
     }
 
     export function Guess() {
@@ -183,62 +176,6 @@ namespace Game {
         artworkDialogue.close();
     }
 
-    let toggleAllState: boolean;
-    export function OpenSongFilter() {
-        toggleAllState = unitFilters.length > 0;
-        (document.getElementById("unitFilterToggleAll") as HTMLInputElement).checked = !toggleAllState;
-
-        const checkboxes = document.getElementsByName('unitFilter');
-
-        checkboxes.forEach(checkbox => {
-            const element = checkbox as HTMLInputElement;
-            if (unitFilters == null || unitFilters.length <= 0 || unitFilters.includes(element.value as Unit)) {
-                element.checked = true;
-            } else {
-                element.checked = false;
-            }
-        });
-        unitFilterDialogue.showModal();
-    }
-
-    export function CloseSongFilter() {
-        const checkboxes = document.getElementsByName('unitFilter');
-
-        unitFilters = [];
-        checkboxes.forEach(checkbox => {
-            const element = checkbox as HTMLInputElement;
-            if (element.checked) {
-                unitFilters.push(element.value as Unit);
-            }
-        });
-
-        if (unitFilters.length > 0) {
-            if (unitFilters.length == 1 && unitFilters[0] == Unit.other) {
-                // Exclude mixed songs from those not by the main groups
-            } else {
-                unitFilters.push(Unit.all);
-            }
-
-            // All filters on, so not actually filtering
-            if (unitFilters.length >= 8) {
-                unitFilters = [];
-            }
-        }
-
-        localStorage.setItem(unitFilterKey, JSON.stringify(unitFilters));
-
-        unitFilterDialogue.close();
-    }
-    export function SongFilterToggleAll() {
-        const checkboxes = document.getElementsByName('unitFilter');
-
-        checkboxes.forEach(checkbox => {
-            const element = checkbox as HTMLInputElement;
-            element.checked = toggleAllState;
-        });
-
-        toggleAllState = !toggleAllState;
-    }
 
     function MakeResultsScreen() {
         gameScreen.classList.add("hidden");
@@ -317,10 +254,10 @@ namespace Game {
         guessCount = 0;
 
         DeselectSong();
-        if (unitFilters.length <= 0) {
+        if (SongFilter.HasFilter()) {
             ChoicesManager.ResetChoices();
         } else {
-            ChoicesManager.FilterChoicesToUnits(unitFilters);
+            ChoicesManager.FilterChoicesToUnits(SongFilter.unitFilters);
         }
 
         if (testingMode) {
@@ -404,7 +341,7 @@ namespace Game {
 
         // load unit filters
         let unitFilterJson = localStorage.getItem(unitFilterKey) ?? "[]";
-        unitFilters = JSON.parse(unitFilterJson);
+        SongFilter.unitFilters = JSON.parse(unitFilterJson);
 
         NewGame();
 

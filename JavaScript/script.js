@@ -22,13 +22,12 @@ var Game;
     const dailyDayLabel = document.getElementById("dayLabel");
     Game.aboutDialogue = document.getElementById("aboutDialogue");
     const unitFilterButton = document.getElementById("unitFilterButton");
-    const unitFilterDialogue = document.getElementById("unitFilterDialogue");
     Game.musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
     Game.jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/";
     const startPlaybackSeconds = 1;
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
-    const unitFilterKey = "unitFilters";
+    Game.unitFilterKey = "unitFilters";
     const testingMode = true;
     const loggingMode = false;
     let chosenSong;
@@ -36,7 +35,6 @@ var Game;
     let currentAllowedPlaybackSeconds = 1;
     let unlimitedMode = false;
     let hasDoneDaily = false;
-    let unitFilters = [];
     function GetDay() {
         const epochOffset = 20772;
         let daysSinceEpoch = Math.floor(Date.now() / 8.64e7);
@@ -48,16 +46,13 @@ var Game;
     }
     function GetRandomSong() {
         let songsToSelectFrom;
-        if (unitFilters != null && unitFilters.length > 0) {
-            songsToSelectFrom = GetFilteredSongs();
+        if (SongFilter.HasFilter()) {
+            songsToSelectFrom = SongFilter.GetFilteredSongs();
         }
         else {
             songsToSelectFrom = songs;
         }
         return songsToSelectFrom[Math.floor(Math.random() * songsToSelectFrom.length)];
-    }
-    function GetFilteredSongs() {
-        return songs.filter(({ unit }) => unitFilters.includes(unit));
     }
     function Guess() {
         Game.guessCount++;
@@ -156,55 +151,6 @@ var Game;
         artworkDialogue.close();
     }
     Game.HideArtwork = HideArtwork;
-    let toggleAllState;
-    function OpenSongFilter() {
-        toggleAllState = unitFilters.length > 0;
-        document.getElementById("unitFilterToggleAll").checked = !toggleAllState;
-        const checkboxes = document.getElementsByName('unitFilter');
-        checkboxes.forEach(checkbox => {
-            const element = checkbox;
-            if (unitFilters == null || unitFilters.length <= 0 || unitFilters.includes(element.value)) {
-                element.checked = true;
-            }
-            else {
-                element.checked = false;
-            }
-        });
-        unitFilterDialogue.showModal();
-    }
-    Game.OpenSongFilter = OpenSongFilter;
-    function CloseSongFilter() {
-        const checkboxes = document.getElementsByName('unitFilter');
-        unitFilters = [];
-        checkboxes.forEach(checkbox => {
-            const element = checkbox;
-            if (element.checked) {
-                unitFilters.push(element.value);
-            }
-        });
-        if (unitFilters.length > 0) {
-            if (unitFilters.length == 1 && unitFilters[0] == Unit.other) {
-            }
-            else {
-                unitFilters.push(Unit.all);
-            }
-            if (unitFilters.length >= 8) {
-                unitFilters = [];
-            }
-        }
-        localStorage.setItem(unitFilterKey, JSON.stringify(unitFilters));
-        unitFilterDialogue.close();
-    }
-    Game.CloseSongFilter = CloseSongFilter;
-    function SongFilterToggleAll() {
-        const checkboxes = document.getElementsByName('unitFilter');
-        checkboxes.forEach(checkbox => {
-            const element = checkbox;
-            element.checked = toggleAllState;
-        });
-        toggleAllState = !toggleAllState;
-    }
-    Game.SongFilterToggleAll = SongFilterToggleAll;
     function MakeResultsScreen() {
         gameScreen.classList.add("hidden");
         guessInterface.classList.add("hidden");
@@ -275,11 +221,11 @@ var Game;
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
         Game.guessCount = 0;
         DeselectSong();
-        if (unitFilters.length <= 0) {
+        if (SongFilter.HasFilter()) {
             ChoicesManager.ResetChoices();
         }
         else {
-            ChoicesManager.FilterChoicesToUnits(unitFilters);
+            ChoicesManager.FilterChoicesToUnits(SongFilter.unitFilters);
         }
         if (testingMode) {
             chosenSong = songs.filter(({ id }) => id == 184)[0];
@@ -350,8 +296,8 @@ var Game;
         var _a, _b;
         winScreen.hidden = false;
         artworkViewerButton.hidden = false;
-        let unitFilterJson = (_a = localStorage.getItem(unitFilterKey)) !== null && _a !== void 0 ? _a : "[]";
-        unitFilters = JSON.parse(unitFilterJson);
+        let unitFilterJson = (_a = localStorage.getItem(Game.unitFilterKey)) !== null && _a !== void 0 ? _a : "[]";
+        SongFilter.unitFilters = JSON.parse(unitFilterJson);
         NewGame();
         CheckLastDoneDate();
         if (hasDoneDaily && !testingMode) {
