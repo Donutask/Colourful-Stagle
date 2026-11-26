@@ -35,6 +35,7 @@ namespace Game {
 
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
+    const unitFilterKey = "unitFilters";
 
     // DEBUGGING
     const testingMode = true;
@@ -138,7 +139,7 @@ namespace Game {
             currentAllowedPlaybackSeconds = Math.ceil(audioPlayer.duration);
         } else if (guessCount == 6) {
             // unit
-            ChoicesManager.FilterChoicesToUnit(chosenSong.unit);
+            ChoicesManager.FilterChoicesToUnits([chosenSong.unit]);
         } else if (guessCount == 7) {
             // cover
             artworkViewerButton.classList.remove("hidden");
@@ -230,6 +231,8 @@ namespace Game {
             }
         }
 
+        localStorage.setItem(unitFilterKey, JSON.stringify(unitFilters));
+
         unitFilterDialogue.close();
     }
     export function SongFilterToggleAll() {
@@ -320,7 +323,11 @@ namespace Game {
         guessCount = 0;
 
         DeselectSong();
-        ChoicesManager.ResetChoices();
+        if (unitFilters.length <= 0) {
+            ChoicesManager.ResetChoices();
+        } else {
+            ChoicesManager.FilterChoicesToUnits(unitFilters);
+        }
 
         if (testingMode) {
             // Song called Hello, World
@@ -400,6 +407,10 @@ namespace Game {
         // some elements hidden from DOM when page is loading
         winScreen.hidden = false;
         artworkViewerButton.hidden = false;
+
+        // load unit filters
+        let unitFilterJson = localStorage.getItem(unitFilterKey) ?? "[]";
+        unitFilters = JSON.parse(unitFilterJson);
 
         NewGame();
 

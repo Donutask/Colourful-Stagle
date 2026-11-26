@@ -46,9 +46,12 @@ namespace ChoicesManager {
         songChoicesElement.value = "";
     }
 
-    export function FilterChoicesToUnit(unit: Unit) {
+    // Used for unit hint and the song filter
+    export function FilterChoicesToUnits(units: Unit[]) {
+        if (choices == null) { return; }
+
         //@ts-expect-error Choice is any because no types defined
-        let filteredChoices = choiceList.filter((c) => c.customProperties.unitId == unit);
+        let filteredChoices = choiceList.filter((c) => units.includes(c.customProperties.unitId));
 
         choices.clearChoices(true, true)
         choices.setChoices(filteredChoices);
@@ -57,11 +60,11 @@ namespace ChoicesManager {
     }
 
     export function ResetChoices() {
-        if (choices != null) {
-            choices.clearChoices(true, true)
-            choices.setChoices(choiceList);
-            songChoicesElement.value = "";
-        }
+        if (choices == null) { return; }
+
+        choices.clearChoices(true, true)
+        choices.setChoices(choiceList);
+        songChoicesElement.value = "";
     }
 
     const sortByLabel = (a: any, b: any) => {

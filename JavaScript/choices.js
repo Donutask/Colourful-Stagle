@@ -35,19 +35,23 @@ var ChoicesManager;
         ChoicesManager.songChoicesElement.value = "";
     }
     ChoicesManager.MakeChoices = MakeChoices;
-    function FilterChoicesToUnit(unit) {
-        let filteredChoices = choiceList.filter((c) => c.customProperties.unitId == unit);
+    function FilterChoicesToUnits(units) {
+        if (ChoicesManager.choices == null) {
+            return;
+        }
+        let filteredChoices = choiceList.filter((c) => units.includes(c.customProperties.unitId));
         ChoicesManager.choices.clearChoices(true, true);
         ChoicesManager.choices.setChoices(filteredChoices);
         ChoicesManager.songChoicesElement.value = "";
     }
-    ChoicesManager.FilterChoicesToUnit = FilterChoicesToUnit;
+    ChoicesManager.FilterChoicesToUnits = FilterChoicesToUnits;
     function ResetChoices() {
-        if (ChoicesManager.choices != null) {
-            ChoicesManager.choices.clearChoices(true, true);
-            ChoicesManager.choices.setChoices(choiceList);
-            ChoicesManager.songChoicesElement.value = "";
+        if (ChoicesManager.choices == null) {
+            return;
         }
+        ChoicesManager.choices.clearChoices(true, true);
+        ChoicesManager.choices.setChoices(choiceList);
+        ChoicesManager.songChoicesElement.value = "";
     }
     ChoicesManager.ResetChoices = ResetChoices;
     const sortByLabel = (a, b) => {

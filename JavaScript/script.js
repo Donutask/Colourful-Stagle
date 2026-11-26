@@ -28,6 +28,7 @@ var Game;
     const startPlaybackSeconds = 1;
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
+    const unitFilterKey = "unitFilters";
     const testingMode = true;
     const loggingMode = false;
     let chosenSong;
@@ -115,7 +116,7 @@ var Game;
             currentAllowedPlaybackSeconds = Math.ceil(audioPlayer.duration);
         }
         else if (Game.guessCount == 6) {
-            ChoicesManager.FilterChoicesToUnit(chosenSong.unit);
+            ChoicesManager.FilterChoicesToUnits([chosenSong.unit]);
         }
         else if (Game.guessCount == 7) {
             artworkViewerButton.classList.remove("hidden");
@@ -197,6 +198,7 @@ var Game;
                 unitFilters = [];
             }
         }
+        localStorage.setItem(unitFilterKey, JSON.stringify(unitFilters));
         unitFilterDialogue.close();
     }
     Game.CloseSongFilter = CloseSongFilter;
@@ -279,7 +281,12 @@ var Game;
         currentAllowedPlaybackSeconds = startPlaybackSeconds;
         Game.guessCount = 0;
         DeselectSong();
-        ChoicesManager.ResetChoices();
+        if (unitFilters.length <= 0) {
+            ChoicesManager.ResetChoices();
+        }
+        else {
+            ChoicesManager.FilterChoicesToUnits(unitFilters);
+        }
         if (testingMode) {
             chosenSong = songs.filter(({ id }) => id == 184)[0];
         }
@@ -346,13 +353,15 @@ var Game;
         Game.guessButton.disabled = false;
     });
     window.addEventListener("load", () => {
-        var _a;
+        var _a, _b;
         winScreen.hidden = false;
         artworkViewerButton.hidden = false;
+        let unitFilterJson = (_a = localStorage.getItem(unitFilterKey)) !== null && _a !== void 0 ? _a : "[]";
+        unitFilters = JSON.parse(unitFilterJson);
         NewGame();
         CheckLastDoneDate();
         if (hasDoneDaily && !testingMode) {
-            Game.guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
+            Game.guessCount = parseInt((_b = localStorage.getItem(dailyGuessesKey)) !== null && _b !== void 0 ? _b : "0");
             MakeResultsScreen();
         }
         ChoicesManager.MakeChoices();
