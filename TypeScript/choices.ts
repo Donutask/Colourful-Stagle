@@ -67,7 +67,8 @@ namespace ChoicesManager {
         songChoicesElement.value = "";
     }
 
-    const sortByLabel = (a: any, b: any) => {
+    // The sorting was assisted by Ai. I would I have made a real inefficient sorting algorithm otherwise.
+    const sortByLabel = (a: any, b: any): number => {
         // Remove the image that's at the start
         const labelA = a.label.split(">")[1];
         const labelB = b.label.split(">")[1];

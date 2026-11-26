@@ -37,7 +37,7 @@ namespace Game {
     export const unitFilterKey = "unitFilters";
 
     // DEBUGGING
-    const testingMode = false;
+    const testingMode = true;
 
     // GAME PARAMETERS
     let chosenSong: Song;

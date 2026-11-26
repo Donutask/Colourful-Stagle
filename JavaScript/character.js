@@ -1,16 +1,1 @@
-"use strict";
-class Character {
-    constructor(characterId, fullName, shortName, colour, unit) {
-        this.characterId = characterId;
-        this.fullName = fullName;
-        this.shortName = shortName;
-        this.colour = colour;
-        this.unit = unit;
-    }
-    GetCharacterImageURL() {
-        return "Images/character/" + this.characterId + ".png";
-    }
-    GetCharacterStickerBaseURL() {
-        return "Images/stickers/" + this.characterId + "/";
-    }
-}
+class s{constructor(a,c,e,i,r){this.characterId=a;this.fullName=c;this.shortName=e;this.colour=i;this.unit=r}GetCharacterImageURL(){return"Images/character/"+this.characterId+".png"}GetCharacterStickerBaseURL(){return"Images/stickers/"+this.characterId+"/"}}

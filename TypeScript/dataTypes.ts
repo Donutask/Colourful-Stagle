@@ -1,4 +1,5 @@
-// Ai was used to convert the JSON file schemas into these TypeScript classes
+// Ai was used to convert the JSON file schemas (see /JSON) into these TypeScript classes
+// This is used for the processData script
 class Music {
     constructor(
         public id: number,

@@ -1,0 +1,4 @@
+I like coding. There's no fun in making Ai do all the work.
+Some of the boring parts I didn't want to do myself were handed off to an LLM.
+For example, writing the constructors in TypeScript/dataTypes.ts has no creative thought, but is something that an LLM can quickly do.
+All LLM assisted code is commented as such in the source.

@@ -1,0 +1,19 @@
+A. Easy Build
+1. Install typescript:
+$npm install typescript
+2. Run typescript compiler 
+$tsc
+
+   Or to build every time you save a typescript file:
+$tsc --watch
+
+Done!
+
+B. Minified Build
+(requires TypeScript form easy build)
+1. Install esbuild
+$npm install esbuild
+2. Run the build script found in package.json > "scripts" > "build"
+   If you are using Visual Studio Code, run build command with Ctrl + Shift + B. Find the build script in .vscode/tasks.json
+
+(The minified build script was made by Ai. There were so many different minifying options to sift through. I just want to write the code, not minify it)

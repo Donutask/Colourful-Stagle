@@ -1,7 +1,1 @@
-"use strict";
-class SaveData {
-    constructor(guesses, dailyDay) {
-        this.guesses = guesses;
-        this.dailyDay = dailyDay;
-    }
-}
+class c{constructor(s,u){this.guesses=s;this.dailyDay=u}}
