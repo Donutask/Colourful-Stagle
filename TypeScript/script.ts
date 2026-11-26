@@ -38,7 +38,7 @@ namespace Game {
     const unitFilterKey = "unitFilters";
 
     // DEBUGGING
-    const testingMode = true;
+    const testingMode = false;
     const loggingMode = false;
 
     // GAME PARAMETERS
@@ -75,12 +75,6 @@ namespace Game {
     // Only songs from specific unit
     function GetFilteredSongs(): Song[] {
         return songs.filter(({ unit }) => unitFilters.includes(unit));
-    }
-
-    export function TestFiltering() {
-        console.log(unitFilters);
-        const songs = GetFilteredSongs();
-        console.log(songs);
     }
 
     export function Guess() {
