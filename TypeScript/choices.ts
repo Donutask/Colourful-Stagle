@@ -52,6 +52,8 @@ namespace ChoicesManager {
 
         choices.clearChoices(true, true)
         choices.setChoices(filteredChoices);
+
+        songChoicesElement.value = "";
     }
 
     export function ResetChoices() {

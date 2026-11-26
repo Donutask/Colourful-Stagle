@@ -1,1 +1,56 @@
-"use strict"; class Music { constructor(e, t, n, r, i, a, o, s, c, l, u, d, f, p, m, h, g, _, v, y) { this.id = e, this.seq = t, this.releaseConditionId = n, this.categories = r, this.title = i, this.pronunciation = a, this.creatorArtistId = o, this.lyricist = s, this.composer = c, this.arranger = l, this.dancerCount = u, this.selfDancerPosition = d, this.assetbundleName = f, this.liveTalkBackgroundAssetbundleName = p, this.publishedAt = m, this.releasedAt = h, this.liveStageId = g, this.fillerSec = _, this.isNewlyWrittenMusic = v, this.isFullLength = y } } class MusicTag { constructor(e, t, n, r) { this.id = e, this.musicId = t, this.musicTag = n, this.seq = r } } class MusicVocalCharacter { constructor(e, t, n, r, i, a) { this.id = e, this.musicId = t, this.musicVocalId = n, this.characterType = r, this.characterId = i, this.seq = a } } class MusicVocal { constructor(e, t, n, r, i, a, o, s, c) { this.id = e, this.musicId = t, this.musicVocalType = n, this.seq = r, this.releaseConditionId = i, this.caption = a, this.characters = o, this.assetbundleName = s, this.archivePublishedAt = c } }
+"use strict";
+class Music {
+    constructor(id, seq, releaseConditionId, categories, title, pronunciation, creatorArtistId, lyricist, composer, arranger, dancerCount, selfDancerPosition, assetbundleName, liveTalkBackgroundAssetbundleName, publishedAt, releasedAt, liveStageId, fillerSec, isNewlyWrittenMusic, isFullLength) {
+        this.id = id;
+        this.seq = seq;
+        this.releaseConditionId = releaseConditionId;
+        this.categories = categories;
+        this.title = title;
+        this.pronunciation = pronunciation;
+        this.creatorArtistId = creatorArtistId;
+        this.lyricist = lyricist;
+        this.composer = composer;
+        this.arranger = arranger;
+        this.dancerCount = dancerCount;
+        this.selfDancerPosition = selfDancerPosition;
+        this.assetbundleName = assetbundleName;
+        this.liveTalkBackgroundAssetbundleName = liveTalkBackgroundAssetbundleName;
+        this.publishedAt = publishedAt;
+        this.releasedAt = releasedAt;
+        this.liveStageId = liveStageId;
+        this.fillerSec = fillerSec;
+        this.isNewlyWrittenMusic = isNewlyWrittenMusic;
+        this.isFullLength = isFullLength;
+    }
+}
+class MusicTag {
+    constructor(id, musicId, musicTag, seq) {
+        this.id = id;
+        this.musicId = musicId;
+        this.musicTag = musicTag;
+        this.seq = seq;
+    }
+}
+class MusicVocalCharacter {
+    constructor(id, musicId, musicVocalId, characterType, characterId, seq) {
+        this.id = id;
+        this.musicId = musicId;
+        this.musicVocalId = musicVocalId;
+        this.characterType = characterType;
+        this.characterId = characterId;
+        this.seq = seq;
+    }
+}
+class MusicVocal {
+    constructor(id, musicId, musicVocalType, seq, releaseConditionId, caption, characters, assetbundleName, archivePublishedAt) {
+        this.id = id;
+        this.musicId = musicId;
+        this.musicVocalType = musicVocalType;
+        this.seq = seq;
+        this.releaseConditionId = releaseConditionId;
+        this.caption = caption;
+        this.characters = characters;
+        this.assetbundleName = assetbundleName;
+        this.archivePublishedAt = archivePublishedAt;
+    }
+}

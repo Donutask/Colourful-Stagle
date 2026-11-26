@@ -88,8 +88,15 @@ header {
     justify-content: center;
 }
 
-header>button {
+.headerButton {
     flex: 1;
+    background: none;
+    border: none;
+}
+
+.headerButtonImg {
+    width: 35px;
+    fill: var(--colour-primary);
 }
 
 #songContent {

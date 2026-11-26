@@ -29,12 +29,12 @@ namespace Game {
     export const musicBaseURL = "https://pjsk.cleista.cc/api/asset/en/music/short/";
     export const jacketBaseURL = "https://assets.cleista.cc/en/music/jacket/"
     const startPlaybackSeconds = 1;
-    const gameName = "Colorful Stagle!"
+
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
 
     // DEBUGGING
-    const testingMode = false;
+    const testingMode = true;
     const loggingMode = false;
 
     // GAME PARAMETERS
@@ -43,6 +43,7 @@ namespace Game {
     let currentAllowedPlaybackSeconds = 1;
     let unlimitedMode = false;
     let hasDoneDaily = false;
+    let unitFilters: Unit[] = [];
 
 
     // Day since release of game
@@ -58,7 +59,25 @@ namespace Game {
     }
 
     function GetRandomSong(): Song {
-        return songs[Math.floor(Math.random() * songs.length)];
+        let songsToSelectFrom;
+        if (unitFilters != null) {
+            songsToSelectFrom = GetFilteredSongs();
+        } else {
+            songsToSelectFrom = songs;
+        }
+        return songsToSelectFrom[Math.floor(Math.random() * songsToSelectFrom.length)];
+    }
+
+    // Only songs from specific unit
+    function GetFilteredSongs(): Song[] {
+        return songs.filter(({ unit }) => unitFilters.includes(unit));
+    }
+
+    export function TestFiltering() {
+        unitFilters = [Unit.idol];
+
+        const songs = GetFilteredSongs();
+        console.log(songs);
     }
 
     export function Guess() {
@@ -191,13 +210,22 @@ namespace Game {
         }
 
         winTitle.textContent = chosenSong.displayName;
-        winImage.src = chosenSong.GetJacketURL();
+
+        if (testingMode) {
+            winImage.src = "Images/loading_jacket.svg";
+        } else {
+            winImage.src = chosenSong.GetJacketURL();
+        }
 
         CharacterPicker.SetStickers();
 
-        if (unlimitedMode) {
+        if (unlimitedMode || testingMode) {
             dailyContainer.classList.add("hidden");
-            playAgainButton.textContent = "New Song";
+            if (testingMode) {
+                playAgainButton.textContent = "Keep Testing";
+            } else {
+                playAgainButton.textContent = "New Song";
+            }
         } else {
             dailyContainer.classList.remove("hidden");
             dailyDayLabel.textContent = GetDay().toString();
@@ -237,22 +265,26 @@ namespace Game {
         DeselectSong();
         ChoicesManager.ResetChoices();
 
-        if (unlimitedMode) {
-            chosenSong = GetRandomSong();
+        if (testingMode) {
+            // Song called Hello, World
+            chosenSong = songs.filter(({ id }) => id == 184)[0];
         } else {
-            chosenSong = GetDailySong();
+            if (unlimitedMode) {
+                chosenSong = GetRandomSong();
+            } else {
+                chosenSong = GetDailySong();
+            }
         }
         if (loggingMode) { console.log(chosenSong); }
 
+
         if (testingMode) {
-            loadingText.innerText = "Testing mode enabled. No song will load."
-            loadingText.classList.remove("loadingAnimated")
-            UpdateHintsStatus();
-            guessButton.disabled = false;
+            gameTitle.textContent = "Test Mode";
+            audioPlayer.src = "Audio/hello_world.mp3";
         } else {
             audioPlayer.src = chosenSong.GetAudioURL();
-            audioPlayer.currentTime = 0;
         }
+        audioPlayer.currentTime = 0;
 
         gameScreen.classList.remove("hidden");
         guessInterface.classList.remove("hidden");

@@ -1,1 +1,16 @@
-"use strict"; class Character { constructor(e, t, n, r, i) { this.characterId = e, this.fullName = t, this.shortName = n, this.colour = r, this.unit = i } GetCharacterImageURL() { return `Images/character/` + this.characterId + `.png` } GetCharacterStickerBaseURL() { return `Images/stickers/` + this.characterId + `/` } }
+"use strict";
+class Character {
+    constructor(characterId, fullName, shortName, colour, unit) {
+        this.characterId = characterId;
+        this.fullName = fullName;
+        this.shortName = shortName;
+        this.colour = colour;
+        this.unit = unit;
+    }
+    GetCharacterImageURL() {
+        return "Images/character/" + this.characterId + ".png";
+    }
+    GetCharacterStickerBaseURL() {
+        return "Images/stickers/" + this.characterId + "/";
+    }
+}

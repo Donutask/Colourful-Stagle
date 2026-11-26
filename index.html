@@ -19,9 +19,13 @@
 <body>
     <div id="content">
         <header class="layoutFlexItem">
-            <button id="aboutButton" onclick="Game.aboutDialogue.showModal();">About</button>
+            <button class="headerButton" id="aboutButton" onclick="Game.aboutDialogue.showModal();">
+                <img class="headerButtonImg" src="Images/ui_icons/info.svg" alt="About">
+            </button>
             <h1 id="title">Colorful Stagle!</h1>
-            <button id="characterPickerButton" onclick="CharacterPicker.ShowPicker()">Character</button>
+            <button class="headerButton" id="characterPickerButton" onclick="CharacterPicker.ShowPicker()">
+                <img class="headerButtonImg" src="Images/ui_icons/user-switch.svg" alt="Character">
+            </button>
         </header>
         <div class="layoutFlexItem" id="songContent">
             <p id="loadingMusic" class="loadingAnimated">Loading song. Please wait...</p>
