@@ -37,8 +37,7 @@ namespace Game {
     export const unitFilterKey = "unitFilters";
 
     // DEBUGGING
-    const testingMode = true;
-    const loggingMode = false;
+    const testingMode = false;
 
     // GAME PARAMETERS
     let chosenSong: Song;
@@ -48,6 +47,13 @@ namespace Game {
     let hasDoneDaily = false;
 
 
+    function UtcDate(): Date {
+        const now = new Date();
+        const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+        return utc;
+    }
+
     // Day since release of game
     function GetDay() {
         const epochOffset = 20772;
@@ -55,8 +61,8 @@ namespace Game {
         return daysSinceEpoch - epochOffset;
     }
 
-    function GetDailySong(): Song {
-        let songId = randomSongIds[GetDay() % randomSongIds.length];
+    function GetDailySong(day: number): Song {
+        let songId = randomSongIds[day % randomSongIds.length];
         return songs.filter(({ id }) => id == songId)[0];
     }
 
@@ -210,6 +216,8 @@ namespace Game {
 
         CharacterPicker.SetStickers();
 
+        unitFilterButton.classList.remove("hidden");
+
         if (unlimitedMode || testingMode) {
             dailyContainer.classList.add("hidden");
             if (testingMode) {
@@ -223,7 +231,7 @@ namespace Game {
             playAgainButton.textContent = "Play Unlimited";
 
             if (!hasDoneDaily) {
-                localStorage.setItem(dailyCompletionKey, new Date().toISOString())
+                localStorage.setItem(dailyCompletionKey, UtcDate().toISOString())
                 localStorage.setItem(dailyGuessesKey, guessCount.toString())
 
                 hasDoneDaily = true;
@@ -267,10 +275,9 @@ namespace Game {
             if (unlimitedMode) {
                 chosenSong = GetRandomSong();
             } else {
-                chosenSong = GetDailySong();
+                chosenSong = GetDailySong(GetDay());
             }
         }
-        if (loggingMode) { console.log(chosenSong); }
 
         if (testingMode) {
             gameTitle.textContent = "Test Mode";
@@ -296,8 +303,9 @@ namespace Game {
         let lastDoneValue = localStorage.getItem(dailyCompletionKey);
 
         if (lastDoneValue) {
+            // The last done value should be ms since epoch, so this will create a UTC date.
             const lastDoneDate = new Date(lastDoneValue);
-            const now = new Date();
+            const now = UtcDate();
 
             if (lastDoneDate.getFullYear() == now.getFullYear()
                 && lastDoneDate.getMonth() == now.getMonth()

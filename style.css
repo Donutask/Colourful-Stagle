@@ -96,7 +96,7 @@ header {
     flex: 1;
     background: none;
     border: none;
-    filter: brightness(80%);
+    filter: brightness(85%);
     transition: filter 0.25s;
 }
 

@@ -28,20 +28,24 @@ var Game;
     const dailyCompletionKey = "dailyCompletionDate";
     const dailyGuessesKey = "dailyGuessCount";
     Game.unitFilterKey = "unitFilters";
-    const testingMode = true;
-    const loggingMode = false;
+    const testingMode = false;
     let chosenSong;
     Game.guessCount = 0;
     let currentAllowedPlaybackSeconds = 1;
     let unlimitedMode = false;
     let hasDoneDaily = false;
+    function UtcDate() {
+        const now = new Date();
+        const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+        return utc;
+    }
     function GetDay() {
         const epochOffset = 20772;
         let daysSinceEpoch = Math.floor(Date.now() / 8.64e7);
         return daysSinceEpoch - epochOffset;
     }
-    function GetDailySong() {
-        let songId = randomSongIds[GetDay() % randomSongIds.length];
+    function GetDailySong(day) {
+        let songId = randomSongIds[day % randomSongIds.length];
         return songs.filter(({ id }) => id == songId)[0];
     }
     function GetRandomSong() {
@@ -182,6 +186,7 @@ var Game;
             winImage.src = chosenSong.GetJacketURL();
         }
         CharacterPicker.SetStickers();
+        unitFilterButton.classList.remove("hidden");
         if (unlimitedMode || testingMode) {
             dailyContainer.classList.add("hidden");
             if (testingMode) {
@@ -196,7 +201,7 @@ var Game;
             dailyDayLabel.textContent = GetDay().toString();
             playAgainButton.textContent = "Play Unlimited";
             if (!hasDoneDaily) {
-                localStorage.setItem(dailyCompletionKey, new Date().toISOString());
+                localStorage.setItem(dailyCompletionKey, UtcDate().toISOString());
                 localStorage.setItem(dailyGuessesKey, Game.guessCount.toString());
                 hasDoneDaily = true;
             }
@@ -235,11 +240,8 @@ var Game;
                 chosenSong = GetRandomSong();
             }
             else {
-                chosenSong = GetDailySong();
+                chosenSong = GetDailySong(GetDay());
             }
-        }
-        if (loggingMode) {
-            console.log(chosenSong);
         }
         if (testingMode) {
             gameTitle.textContent = "Test Mode";
@@ -265,7 +267,7 @@ var Game;
         let lastDoneValue = localStorage.getItem(dailyCompletionKey);
         if (lastDoneValue) {
             const lastDoneDate = new Date(lastDoneValue);
-            const now = new Date();
+            const now = UtcDate();
             if (lastDoneDate.getFullYear() == now.getFullYear()
                 && lastDoneDate.getMonth() == now.getMonth()
                 && lastDoneDate.getDate() == now.getDate()) {
