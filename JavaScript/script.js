@@ -59,6 +59,7 @@ var Game;
         return songs.filter(({ unit }) => unitFilters.includes(unit));
     }
     function TestFiltering() {
+        console.log(unitFilters);
         const songs = GetFilteredSongs();
         console.log(songs);
     }
@@ -260,7 +261,7 @@ var Game;
         }
     }
     function NewGame() {
-        if (hasDoneDaily && !unlimitedMode) {
+        if (testingMode || (hasDoneDaily && !unlimitedMode)) {
             unlimitedMode = true;
         }
         audioPlayer.hidden = true;
@@ -350,7 +351,7 @@ var Game;
         artworkViewerButton.hidden = false;
         NewGame();
         CheckLastDoneDate();
-        if (hasDoneDaily) {
+        if (hasDoneDaily && !testingMode) {
             Game.guessCount = parseInt((_a = localStorage.getItem(dailyGuessesKey)) !== null && _a !== void 0 ? _a : "0");
             MakeResultsScreen();
         }

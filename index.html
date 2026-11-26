@@ -19,7 +19,9 @@
 <body>
     <div id="content">
         <header class="layoutFlexItem">
-            <button class="headerButton" id="aboutButton" onclick="Game.aboutDialogue.showModal();">
+            <!-- You need to scroll the title, otherwise it will try to focus on the links in the credits. -->
+            <button class="headerButton" id="aboutButton"
+                onclick="new function (){Game.aboutDialogue.showModal(); document.getElementById('howToPlayTitle').scrollIntoView();}">
                 <img class="headerButtonImg" src="Images/ui_icons/info.svg" alt="About">
             </button>
             <h1 id="title">Colorful Stagle!</h1>
@@ -86,7 +88,9 @@
 
     <dialog id="unitFilterDialogue">
         <h2>Song Filter</h2>
-        <p>Choose the songs chosen in unlimited mode. This will take effect on the next round.</p>
+        <p>Select the units whose songs will be chosen in unlimited mode. This will take effect on the next round.
+            Selecting nothing will
+            choose any song (same effect as selecting everything).</p>
 
         <label>
             <input id="unitFilterToggleAll" type="checkbox" onchange="Game.SongFilterToggleAll()">
@@ -130,7 +134,7 @@
                 Other
             </label>
         </form>
-        <button class="blueButton" onclick="Game.CloseSongFilter()">Close</button>
+        <button class="blueButton" onclick="Game.CloseSongFilter()">Confirm</button>
     </dialog>
 
     <dialog id="characterPicker">
@@ -146,7 +150,7 @@
             <h2>About Colorful Stagle</h2>
             <p>Guess the name of the song from <i>Hatsune Miku: Colourful Stage!</i></p>
             <div id="aboutDetails">
-                <h3>How To Play</h3>
+                <h3 id="howToPlayTitle">How To Play</h3>
                 <p>You get 9 attempts to name the <i>Colorful Stage</i> song.</p>
                 <p>Click the play button at the top to start listening. The audio is a short excerpt from the song,
                     usually the chorus. You start with only 1 second of audio. Each incorrect guess will let you listen

@@ -77,6 +77,7 @@ namespace Game {
     }
 
     export function TestFiltering() {
+        console.log(unitFilters);
         const songs = GetFilteredSongs();
         console.log(songs);
     }
@@ -298,7 +299,7 @@ namespace Game {
 
     // Artwork image for current song
     export function NewGame() {
-        if (hasDoneDaily && !unlimitedMode) {
+        if (testingMode || (hasDoneDaily && !unlimitedMode)) {
             unlimitedMode = true;
         }
 
@@ -403,7 +404,7 @@ namespace Game {
         NewGame();
 
         CheckLastDoneDate();
-        if (hasDoneDaily) {
+        if (hasDoneDaily && !testingMode) {
             guessCount = parseInt(localStorage.getItem(dailyGuessesKey) ?? "0");
             MakeResultsScreen();
         }
@@ -411,5 +412,6 @@ namespace Game {
         ChoicesManager.MakeChoices();
     });
 
+    //About screen text
     (document.getElementById("lastUpdated") as HTMLElement).innerText = "Song List Last Updated: " + SONGS_LAST_UPDATED;
 }
