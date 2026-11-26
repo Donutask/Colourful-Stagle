@@ -1,1 +1,83 @@
-"use strict"; var CharacterPicker; (function (e) { let t = document.getElementById(`characterPicker`), n = document.getElementById(`charactersContainer`), r = document.getElementById(`metaThemeColour`), i = document.getElementById(`winStickerL`), a = document.getElementById(`winStickerR`), o = `chosenCharacter`, s, c; function l(e) { let t = characters[e - 1]; s = t, document.documentElement.style.setProperty(`--colour-primary`, t.colour), r.content = t.colour, u(), localStorage.setItem(o, e.toString()) } e.SetThemeCharacter = l; function u() { try { let e = d(Game.guessCount); i.src = e, a.src = e } catch { } } e.SetStickers = u; function d(e) { let t; t = s || characters[20]; let n = t.GetCharacterStickerBaseURL(), r = ``; return e <= 1 ? r = `first` : e >= 2 && e <= 4 ? r = `low` : e >= 5 && e <= 8 ? r = `high` : e >= 9 && (r = `fail`), n + r + `.png` } function f() { c = !0, characters.forEach(e => { let r = document.createElement(`button`); r.className = `characterPickerButton`, r.innerHTML = `<img class='characterPickerButtonImage' src='` + e.GetCharacterImageURL() + `'>`, r.addEventListener(`click`, () => { l(e.characterId), t.close() }), n.appendChild(r) }) } function p() { c || f(), t.showModal() } e.ShowPicker = p; let m = parseInt(localStorage.getItem(o) ?? `0`); l(m <= 0 || m >= 27 ? 21 : m) })(CharacterPicker ||= {});
+"use strict";
+var CharacterPicker;
+(function (CharacterPicker) {
+    var _a;
+    const characterDialogue = document.getElementById("characterPicker");
+    const charactersContainer = document.getElementById("charactersContainer");
+    const metaThemeColour = document.getElementById("metaThemeColour");
+    const stickerImageL = document.getElementById("winStickerL");
+    const stickerImageR = document.getElementById("winStickerR");
+    const characterKey = "chosenCharacter";
+    let chosenCharacter;
+    let madePicker;
+    function SetThemeCharacter(characterId) {
+        const character = characters[characterId - 1];
+        chosenCharacter = character;
+        document.documentElement.style.setProperty("--colour-primary", character.colour);
+        metaThemeColour.content = character.colour;
+        SetStickers();
+        localStorage.setItem(characterKey, characterId.toString());
+    }
+    CharacterPicker.SetThemeCharacter = SetThemeCharacter;
+    function SetStickers() {
+        try {
+            let stickerURL = ChooseSticker(Game.guessCount);
+            stickerImageL.src = stickerURL;
+            stickerImageR.src = stickerURL;
+        }
+        catch (_a) {
+        }
+    }
+    CharacterPicker.SetStickers = SetStickers;
+    function ChooseSticker(guessCount) {
+        let stickerCharacter;
+        if (chosenCharacter) {
+            stickerCharacter = chosenCharacter;
+        }
+        else {
+            stickerCharacter = characters[20];
+        }
+        const base = stickerCharacter.GetCharacterStickerBaseURL();
+        let additional = "";
+        if (guessCount <= 1) {
+            additional = "first";
+        }
+        else if (guessCount >= 2 && guessCount <= 4) {
+            additional = "low";
+        }
+        else if (guessCount >= 5 && guessCount <= 8) {
+            additional = "high";
+        }
+        else if (guessCount >= 9) {
+            additional = "fail";
+        }
+        return base + additional + ".png";
+    }
+    function MakePicker() {
+        madePicker = true;
+        characters.forEach(c => {
+            const button = document.createElement("button");
+            button.className = "characterPickerButton";
+            button.innerHTML = "<img class='characterPickerButtonImage' src='" + c.GetCharacterImageURL() + "'>";
+            button.addEventListener("click", () => {
+                SetThemeCharacter(c.characterId);
+                characterDialogue.close();
+            });
+            charactersContainer.appendChild(button);
+        });
+    }
+    function ShowPicker() {
+        if (!madePicker) {
+            MakePicker();
+        }
+        characterDialogue.showModal();
+    }
+    CharacterPicker.ShowPicker = ShowPicker;
+    let stored = parseInt((_a = localStorage.getItem(characterKey)) !== null && _a !== void 0 ? _a : "0");
+    if (stored <= 0 || stored >= 27) {
+        SetThemeCharacter(21);
+    }
+    else {
+        SetThemeCharacter(stored);
+    }
+})(CharacterPicker || (CharacterPicker = {}));

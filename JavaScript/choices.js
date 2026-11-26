@@ -1,1 +1,71 @@
-"use strict"; var ChoicesManager; (function (e) { e.songChoicesElement = document.getElementById(`choices`); let t; function n() { t = [], songs.forEach(e => { t.push({ value: e.id, label: `<img class='unitIcon' src='Images/unit_icons/${e.unit}.svg'>` + e.displayName, customProperties: { title: e.displayName, unit: e.GetUnitDisplayName(), unitId: e.unit, pronunciation: e.pronunciation, abbreviation: e.GetUnitAbbreviatedName() } }) }), e.choices = new Choices(e.songChoicesElement, { choices: t, searchFields: [`customProperties.pronunciation`, `customProperties.unit`, `customProperties.title`, `customProperties.abbreviation`], searchResultLimit: -1, searchPlaceholderValue: `Search for a song`, placeholderValue: `No song selected`, sorter: a, shouldSort: !0, allowHTML: !0, position: `top` }), e.songChoicesElement.addEventListener(`change`, () => { Game.guessButton.innerText = `Guess` }), e.songChoicesElement.value = `` } e.MakeChoices = n; function r(n) { if (e.choices == null) return; let r = t.filter(e => n.includes(e.customProperties.unitId)); e.choices.clearChoices(!0, !0), e.choices.setChoices(r), e.songChoicesElement.value = `` } e.FilterChoicesToUnits = r; function i() { e.choices != null && (e.choices.clearChoices(!0, !0), e.choices.setChoices(t), e.songChoicesElement.value = ``) } e.ResetChoices = i; let a = (e, t) => { let n = e.label.split(`>`)[1], r = t.label.split(`>`)[1], i = o(n); return i === o(r) ? n.localeCompare(r, void 0, { sensitivity: `base`, numeric: !0, ignorePunctuation: !0 }) : i ? -1 : 1 }, o = e => /^\p{L}/u.test(e) })(ChoicesManager ||= {});
+"use strict";
+var ChoicesManager;
+(function (ChoicesManager) {
+    ChoicesManager.songChoicesElement = document.getElementById('choices');
+    let choiceList;
+    function MakeChoices() {
+        choiceList = [];
+        songs.forEach(song => {
+            choiceList.push({
+                value: song.id,
+                label: `<img class='unitIcon' src='Images/unit_icons/${song.unit}.svg'>` + song.displayName,
+                customProperties: {
+                    title: song.displayName,
+                    unit: song.GetUnitDisplayName(),
+                    unitId: song.unit,
+                    pronunciation: song.pronunciation,
+                    abbreviation: song.GetUnitAbbreviatedName(),
+                },
+            });
+        });
+        ChoicesManager.choices = new Choices(ChoicesManager.songChoicesElement, {
+            choices: choiceList,
+            searchFields: ['customProperties.pronunciation', 'customProperties.unit', 'customProperties.title', 'customProperties.abbreviation'],
+            searchResultLimit: -1,
+            searchPlaceholderValue: "Search for a song",
+            placeholderValue: "No song selected",
+            sorter: sortByLabel,
+            shouldSort: true,
+            allowHTML: true,
+            position: "top"
+        });
+        ChoicesManager.songChoicesElement.addEventListener("change", () => {
+            Game.guessButton.innerText = "Guess";
+        });
+        ChoicesManager.songChoicesElement.value = "";
+    }
+    ChoicesManager.MakeChoices = MakeChoices;
+    function FilterChoicesToUnits(units) {
+        if (ChoicesManager.choices == null) {
+            return;
+        }
+        let filteredChoices = choiceList.filter((c) => units.includes(c.customProperties.unitId));
+        ChoicesManager.choices.clearChoices(true, true);
+        ChoicesManager.choices.setChoices(filteredChoices);
+        ChoicesManager.songChoicesElement.value = "";
+    }
+    ChoicesManager.FilterChoicesToUnits = FilterChoicesToUnits;
+    function ResetChoices() {
+        if (ChoicesManager.choices == null) {
+            return;
+        }
+        ChoicesManager.choices.clearChoices(true, true);
+        ChoicesManager.choices.setChoices(choiceList);
+        ChoicesManager.songChoicesElement.value = "";
+    }
+    ChoicesManager.ResetChoices = ResetChoices;
+    const sortByLabel = (a, b) => {
+        const labelA = a.label.split(">")[1];
+        const labelB = b.label.split(">")[1];
+        const aLetter = startsWithLetter(labelA);
+        const bLetter = startsWithLetter(labelB);
+        if (aLetter !== bLetter)
+            return aLetter ? -1 : 1;
+        return labelA.localeCompare(labelB, undefined, {
+            sensitivity: 'base',
+            numeric: true,
+            ignorePunctuation: true,
+        });
+    };
+    const startsWithLetter = (str) => /^\p{L}/u.test(str);
+})(ChoicesManager || (ChoicesManager = {}));

@@ -38,7 +38,7 @@ namespace Game {
     const unitFilterKey = "unitFilters";
 
     // DEBUGGING
-    const testingMode = false;
+    const testingMode = true;
     const loggingMode = false;
 
     // GAME PARAMETERS
@@ -192,7 +192,7 @@ namespace Game {
 
         checkboxes.forEach(checkbox => {
             const element = checkbox as HTMLInputElement;
-            if (unitFilters.length <= 0 || unitFilters.includes(element.value as Unit)) {
+            if (unitFilters == null || unitFilters.length <= 0 || unitFilters.includes(element.value as Unit)) {
                 element.checked = true;
             } else {
                 element.checked = false;
